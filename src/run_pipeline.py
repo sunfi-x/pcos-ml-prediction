@@ -28,7 +28,6 @@ from . import (
     eda,
     evaluate,
     explain,
-    external,
     literature,
     models,
     plots,

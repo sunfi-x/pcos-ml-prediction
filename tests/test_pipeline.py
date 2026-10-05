@@ -21,7 +21,6 @@ from src import (
     config,
     data,
     evaluate,
-    external,
     features,
     models,
     validation,
@@ -515,45 +514,6 @@ def test_bootstrap_ci_brackets_the_point_estimate(xy):
     for _, row in ci.iterrows():
         assert row["ci_lower"] <= row["estimate"] <= row["ci_upper"], row["metric"]
         assert row["ci_width"] > 0
-
-
-# --------------------------------------------------------------------------
-# External validation (Out of core proposal scope)
-# --------------------------------------------------------------------------
-@pytest.mark.skip(reason="External validation is out of core proposal scope")
-def test_external_shared_features_exist_in_both(xy):
-    X, _ = xy
-    for column in external.shared_feature_names():
-        assert column in X.columns
-
-
-@pytest.mark.skip(reason="External validation is out of core proposal scope")
-def test_external_excluded_features_have_documented_reasons():
-    """Silently dropping a feature is how incomparable data gets compared."""
-    assert external.EXCLUDED_FEATURES
-    for name, reason in external.EXCLUDED_FEATURES.items():
-        assert len(reason) > 40, f"{name} needs a real explanation, not a stub"
-
-
-@pytest.mark.skip(reason="External validation is out of core proposal scope")
-def test_external_cohort_is_not_a_reupload(clean_df):
-    """Guard against validating on a copy of the training data."""
-    ext = external.harmonise(external.load_external())
-    assert len(ext) != len(clean_df)
-
-
-@pytest.mark.skip(reason="External validation is out of core proposal scope")
-def test_external_units_are_harmonised():
-    """Waist is cm upstream and inches here; a missed conversion is invisible."""
-    ext = external.harmonise(external.load_external())
-    waist = ext["Waist(inch)"].dropna()
-    assert 20 < waist.mean() < 55, f"waist looks unconverted: mean {waist.mean():.1f}"
-
-
-@pytest.mark.skip(reason="External validation is out of core proposal scope")
-def test_external_target_is_binary():
-    ext = external.harmonise(external.load_external())
-    assert set(ext[config.TARGET].unique()) <= {0, 1}
 
 
 
