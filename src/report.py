@@ -538,7 +538,7 @@ def build(output_path=None):
 
     # ------------------------------------------------------- what it uses
     story += [
-        Paragraph("9. What the model actually pays attention to", st["h1"]),
+        Paragraph("8. What the model actually pays attention to", st["h1"]),
         P("A prediction nobody can explain is not much use to a doctor. We used a "
           "technique called SHAP, which breaks each individual prediction down into how "
           "much each measurement pushed it one way or the other."),
@@ -567,7 +567,7 @@ def build(output_path=None):
     recall_row = res["ci"].set_index("metric").loc["recall"]
 
     story += [
-        Paragraph("10. What we could not do", st["h1"]),
+        Paragraph("9. What we could not do", st["h1"]),
         P("A report that only lists successes is not a scientific report. These are the "
           "real limits of this work."),
         B("<b>Our numbers are less precise than they look.</b> With only 36 PCOS cases in "
@@ -598,7 +598,7 @@ def build(output_path=None):
 
     # ------------------------------------------------------------ summary
     story += [
-        Paragraph("11. Summary", st["h1"]),
+        Paragraph("10. Summary", st["h1"]),
         P("What we built and what it scores:"),
     ]
     story += [
@@ -614,7 +614,7 @@ def build(output_path=None):
              "Overall ability to rank patients by risk (1.0 is perfect)"],
         ], st, widths=[3.2 * cm, 2.4 * cm, 10.2 * cm]),
         Spacer(1, 12),
-        Paragraph("The five things worth remembering", st["h2"]),
+        Paragraph("The key takeaways worth remembering", st["h2"]),
     ]
     for text in [
         f"A flawed testing method can manufacture <b>{inflation:.1%} extra accuracy</b> "
