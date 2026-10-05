@@ -18,19 +18,17 @@ five recent papers.
 | Held-out test ROC-AUC | **0.945** — 95% CI **[0.886, 0.989]** |
 | Test recall / specificity | 0.833 / 0.973 |
 
-### The five findings that matter more than the accuracy
+### The key findings of this project
 
 | Finding | Result |
 |---|---|
 | **A leaky protocol manufactures accuracy** | **+3.2 points** accuracy, **+9.0** F1 — same model, same data, same folds |
-| **There is essentially no best algorithm** | 9 compared; only **1 of 8** (KNN) differs practically from the best. Across 30 random splits, **8 of 9 models won at least once**; the most frequent winner took just **27%** |
+| **There is essentially no best algorithm** | 9 compared; only **1 of 8** (KNN) differs practically from the best. Across 30 random splits, **8 of 9 models won at least once** |
 | **A free questionnaire gets you most of the way** | **0.887 AUC** with no clinician, lab or ultrasound — **93%** of the full model. The entire blood panel adds **+0.011** |
-| **The model transfers, but the useful features don't exist elsewhere** | External AUC drop ≈ **−0.006** on an independent Tunisian cohort — but only 8 features are shared, and the headline model **cannot be externally validated on any public data** |
 | **AutoML finds no headroom** | **+0.0004 ROC-AUC** from a 120s architecture + hyperparameter search |
 | **A 2003 clinical rule gets 95% of the way** | "Follicles ≥ 12" reaches **0.903 AUC with zero learned parameters** — but finds only 22 of 36 cases, where the model finds 30 |
 
-Jump to: [leakage](#the-leakage-experiment) · [no best algorithm](#there-is-no-best-algorithm-here) ·
-[cost tiers](#what-does-each-tier-of-testing-actually-buy) · [external validation](#external-validation)
+Jump to: [leakage](#the-leakage-experiment) · [no best algorithm](#there-is-no-best-algorithm-here) · [cost tiers](#what-does-each-tier-of-testing-actually-buy)
 
 ---
 
@@ -49,11 +47,10 @@ was done about each:
 | **Winners declared from tiny margins** | Paired t-tests across identical folds, reporting statistical *and* practical separability; plus a 30-split sweep in which 8 of 9 models win at least once |
 | **Only ranking metrics reported** | Brier score, log loss and calibration curves — whether the probabilities mean anything |
 | **No check that the approach itself is sound** | AutoML benchmark under the same protocol, to test for headroom |
-| **No external validation** — *nobody closed this* | **Closed as far as public data allows**: an independent Tunisian cohort (n=88, CC BY 4.0), with provenance checks against re-uploads. Finding: the headline model *cannot* be externally validated on any public data |
 | **No point estimates without uncertainty** | 95% bootstrap CIs on every test metric |
 | **No clinical utility measure** | Decision curve analysis (net benefit) and cost-tiered deployment models |
 | **No reporting standard followed** | [TRIPOD+AI checklist](reports/TRIPOD_AI_checklist.md) filled in item by item, including a PROBAST-style risk-of-bias self-assessment |
-| **Models compared only against other models** | Five clinical decision rules — including the Rotterdam criterion applied verbatim — run through the identical protocol, so "does ML beat counting follicles?" gets a number |
+| **Models compared only against other models** | Five clinical decision rules — including the Rotterdam criterion applied verbatim — run through the identical protocol |
 
 What we did **not** close, stated plainly: the dataset contains no ultrasound imagery, and
 our external validation is structurally limited — only 8 features are shared with the
@@ -390,58 +387,12 @@ needs more than 432 rows to fit a stable mapping, and it pins probabilities hard
 The lesson is that calibration is not free, and on a dataset this size the textbook fix
 can make the probabilities less trustworthy rather than more.
 
-## External validation
+## External validation (Literature Limitation Note)
 
-Every reviewed paper was criticised in our gap analysis for never testing on a
-second population. We closed that gap as far as public data allows — and what we
-found reframes the criticism.
+In our literature review of prior studies, "No external validation" was noted as a common limitation across existing papers. To keep this project strictly aligned with our core project proposal objectives, model development, evaluation, feature selection, and XAI are focused entirely on the primary 541-patient dataset using repeated stratified 10-fold cross-validation and an untouched held-out test split.
 
-**The cohort.** A case-control study from Sfax, Tunisia
-([Mendeley, doi:10.17632/tw34c7hv7z.1](https://data.mendeley.com/datasets/tw34c7hv7z/1),
-CC BY 4.0). 88 women, same Rotterdam criteria. Genuinely independent, and the
-differences are the point:
+---
 
-| | Kerala (train) | Tunisia (external) |
-|---|---|---|
-| n | 541 | 88 |
-| Country | India | Tunisia |
-| Class ratio | 2.06 : 1 | 1.05 : 1 |
-| Mean age | 31.4 | 25.5 |
-| Mean BMI | 24.3 | 27.1 |
-
-Before using it we checked it was not a re-upload of the training data — the
-single biggest hazard here, since many public "PCOS datasets" are copies of the
-same Kerala file. Provenance checks for every candidate are recorded in
-`reports/results/external_search_log.txt`, and enforced by
-`tests/test_pipeline.py::test_external_cohort_is_not_a_reupload`.
-
-**Three findings:**
-
-1. **The restricted model transfers cleanly.** Mean AUC change from Kerala CV to
-   Tunisian patients is **−0.006** across nine algorithms, despite a different
-   country, a 6-year-younger cohort and a near-inverted class balance. What the
-   model learned is not Kerala-specific.
-2. **But the restricted model is weak** — both sides sit near 0.65 AUC. Only 8
-   features are shared, and per SHAP, essentially all the signal lives in
-   follicle counts and symptoms. The Tunisian study recorded neither. **The
-   shared features are the weak ones.**
-3. **Therefore the headline model cannot be externally validated at all** — not
-   by us, and not by anyone, on currently public data. No public cohort records
-   follicle counts and PCOS symptoms in a compatible schema.
-
-That third point is the useful contribution. The five papers did not merely
-neglect external validation; **they had no dataset with which to perform it.**
-That is a stronger criticism, because it points at what the field needs —
-compatible multi-centre data collection — rather than at what five authors
-failed to do.
-
-**A fourth observation, on prevalence shift.** Logistic regression achieved 0.96
-recall but 0.21 specificity externally: it labelled almost everyone PCOS.
-Discrimination survived the move; the *threshold* did not. The 0.5 cut-off was
-implicitly tuned for Kerala's 33% prevalence, and Tunisia runs at 51%. A model
-deployed in a new population needs its threshold re-set for that population's
-base rate — and AUC will never reveal the problem. This is the practical argument
-for the calibration analysis above.
 
 ## Does a better pipeline exist? An AutoML check
 

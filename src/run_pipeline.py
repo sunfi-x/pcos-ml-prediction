@@ -547,34 +547,10 @@ def main(quick: bool = False, k_features: int = 15) -> dict:
     )
 
     # ------------------------------------------------ external validation
-    _banner("9e. External validation on an independent cohort")
+    _banner("9e. External validation (Skipped — out of proposal scope)")
     external_summary = None
-    if external.available():
-        ext_raw = external.load_external()
-        ext = external.harmonise(ext_raw)
-        cohort_cmp = external.cohort_comparison(df, ext)
-        _save_table(cohort_cmp, "external_cohort_comparison")
+    print("  External validation is skipped as it was not part of the core proposal objectives.")
 
-        print(f"  Cohort: {external.TUNISIA_SOURCE['name']} "
-              f"(n={len(ext)}, {external.TUNISIA_SOURCE['licence']})")
-        print(f"  DOI   : {external.TUNISIA_SOURCE['doi']}")
-        print(f"\n  Shared features: {len(external.shared_feature_names())} of {X.shape[1]}")
-        print("\n  How different are the cohorts?")
-        print(cohort_cmp.to_string(index=False))
-
-        ext_results, external_summary = external.validate_externally(
-            df, ext, models.build_all_models
-        )
-        _save_table(ext_results, "external_validation")
-        external.plot_external_validation(ext_results, cohort_cmp)
-
-        print("\n  Train on Kerala, test on Tunisia (shared features only):")
-        print(ext_results.round(4).to_string(index=False))
-        print("\n" + external.EXTERNAL_DISCUSSION)
-        (config.RESULTS_DIR / "external_search_log.txt").write_text(external.SEARCH_LOG)
-    else:
-        print("  External cohort not present; skipping.")
-        print(f"  Download from {external.TUNISIA_SOURCE['url']} into data/external/.")
 
     # -------------------------------------------------- literature compare
     _banner("10. Comparison against the reviewed literature")
