@@ -503,36 +503,38 @@ def build(output_path=None):
     ]
 
     # ------------------------------------------------------------ finding 5
-    ext = s["external_validation"]
-    story += [
-        Paragraph("8. Finding 5: does it work on different women?", st["h1"]),
-        P("Every paper we reviewed was criticised in our literature review for testing "
-          "only on the population it was built from. We tried to do better."),
-        P(f"We found a genuinely independent study — <b>{ext['n']} women from a "
-          "hospital in Sfax, Tunisia</b> — and tested our model on them. Different "
-          "country, younger patients, heavier on average, and a different balance of "
-          "cases. We checked carefully that it was not simply a re-upload of our own "
-          "training data, which many public 'PCOS datasets' turn out to be."),
-    ]
-    story += _figure(
-        "21_external_validation.png",
-        "Left: performance at home (blue) versus abroad (red). Right: how different the "
-        "two groups of women actually are.",
-        st, width=15.5 * cm)
-    story += [
-        P("<b>The good news:</b> performance barely moved — an average change of "
-          f"{ext['mean_auc_drop']:+.3f}. What the model learned is not "
-          "specific to Kerala."),
-        P("<b>The catch:</b> the Tunisian study recorded only 8 of our 41 measurements, "
-          "and it did not record follicle counts or symptoms — the very things that carry "
-          "the signal. So we could only test a weakened version of our model."),
-        _callout(
-            "This turns into a stronger criticism of the field than we expected. The five "
-            "papers did not merely <i>neglect</i> to test on other populations — "
-            "<b>no public dataset exists that would let anyone do it</b>. What the field "
-            "needs is not better algorithms but compatible data collection across "
-            "hospitals.", st, BLUE),
-    ]
+    if "external_validation" in s:
+        ext = s["external_validation"]
+        story += [
+            Paragraph("8. Finding 5: does it work on different women?", st["h1"]),
+            P("Every paper we reviewed was criticised in our literature review for testing "
+              "only on the population it was built from. We tried to do better."),
+            P(f"We found a genuinely independent study — <b>{ext['n']} women from a "
+              "hospital in Sfax, Tunisia</b> — and tested our model on them. Different "
+              "country, younger patients, heavier on average, and a different balance of "
+              "cases. We checked carefully that it was not simply a re-upload of our own "
+              "training data, which many public 'PCOS datasets' turn out to be."),
+        ]
+        if (config.FIGURES_DIR / "21_external_validation.png").exists():
+            story += _figure(
+                "21_external_validation.png",
+                "Left: performance at home (blue) versus abroad (red). Right: how different the "
+                "two groups of women actually are.",
+                st, width=15.5 * cm)
+        story += [
+            P("<b>The good news:</b> performance barely moved — an average change of "
+              f"{ext['mean_auc_drop']:+.3f}. What the model learned is not "
+              "specific to Kerala."),
+            P("<b>The catch:</b> the Tunisian study recorded only 8 of our 41 measurements, "
+              "and it did not record follicle counts or symptoms — the very things that carry "
+              "the signal. So we could only test a weakened version of our model."),
+            _callout(
+                "This turns into a stronger criticism of the field than we expected. The five "
+                "papers did not merely <i>neglect</i> to test on other populations — "
+                "<b>no public dataset exists that would let anyone do it</b>. What the field "
+                "needs is not better algorithms but compatible data collection across "
+                "hospitals.", st, BLUE),
+        ]
 
     # ------------------------------------------------------- what it uses
     story += [
@@ -583,8 +585,6 @@ def build(output_path=None):
           "already had reason to attend a hospital."),
         B("<b>No ultrasound images.</b> We have follicle <i>counts</i> taken from scans, "
           "but not the scans themselves."),
-        B("<b>Our external test was partial.</b> As explained in Section 8, only a "
-          "weakened version of the model could be tested abroad."),
         B("<b>This is a coursework project, not a medical device.</b> Diagnosing PCOS "
           "requires a clinician."),
         Spacer(1, 6),
