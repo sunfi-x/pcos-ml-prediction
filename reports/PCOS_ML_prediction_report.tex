@@ -1,4 +1,4 @@
-\documentclass[10pt,a4paper]{article}
+\documentclass[twocolumn,10pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[margin=0.6in,top=0.65in,bottom=0.65in]{geometry}
 \usepackage{amsmath,amssymb,amsfonts}
@@ -9,11 +9,12 @@
 \usepackage{xcolor}
 \usepackage{titlesec}
 \usepackage{enumitem}
+\usepackage{stfloats}
 
-% UIU & Academic Color Palette
-\definecolor{primary}{RGB}{11, 60, 93}     % Dark Blue / Navy Header
-\definecolor{secondary}{RGB}{26, 82, 118}   % Medium Blue Subtitle
-\definecolor{accent}{RGB}{41, 128, 185}    % Bright Blue Accent
+% UIU & Academic Blue Color Palette (Matching Reference Design)
+\definecolor{primary}{RGB}{11, 60, 93}     % Dark Navy Blue (#0B3C5D)
+\definecolor{secondary}{RGB}{26, 82, 118}   % Deep Royal Blue (#1A5276)
+\definecolor{accent}{RGB}{41, 128, 185}    % Steel Blue (#2980B9)
 
 \titleformat{\section}
   {\color{primary}\normalfont\large\bfseries\uppercase}
@@ -30,31 +31,64 @@
     urlcolor=secondary
 }
 
-\title{\color{primary}\Large\bfseries Machine Learning-Based Prediction of Polycystic Ovary Syndrome (PCOS)\\[0.3em]
-\color{secondary}\large\bfseries Project Report --- Machine Learning Course, Group 5}
-
-\author{\textbf{Fatema Ferdous} (0152410052) \quad \textbf{Wafa Haque} (0152420023) \quad \textbf{Khondoker Sazzad Sunfi} (0152310002)\\[0.2em]
-\small Department of Data Science, United International University (UIU)}
-
-\date{}
-
 \begin{document}
 
-\maketitle
-
-\begin{abstract}
-\noindent Polycystic ovary syndrome (PCOS) is a common endocrine disorder that is often diagnosed late due to heterogeneous clinical manifestations. We build an end-to-end machine learning pipeline on a public cohort of 541 patients (41 clinical, hormonal, and ultrasound features) and compare eight classifiers under repeated stratified 10-fold cross-validation plus an untouched 20\% held-out test set. The best model, Stacking Ensemble (and Random Forest) with correlation-based feature selection, reaches a cross-validated ROC-AUC of 0.956 $\pm$ 0.028 and a held-out test accuracy of 0.927 (ROC-AUC 0.945, 95\% CI [0.886, 0.989]). Beyond accuracy, we show that (i) a leaky validation protocol inflates accuracy by 3.2 percentage points and F1-score by 9.0 points, (ii) most competitive algorithms are practically indistinguishable, (iii) a questionnaire-only feature tier recovers 93\% of the full model's AUC without lab or ultrasound tests, and (iv) a simple follicle-count clinical rule is a strong baseline that the ML model improves mainly by boosting sensitivity (83.3\% vs 61.1\%, recovering 8 additional cases). Explainable AI (SHAP) reveals follicle counts, skin darkening, and cycle length as primary clinical drivers.
-\end{abstract}
-
-\vspace{1.0em}
-
-\twocolumn
+\twocolumn[
+  \begin{minipage}{\textwidth}
+    \centering
+    {\color{primary}\Large\bfseries Machine Learning-Based Prediction of Polycystic Ovary Syndrome (PCOS)\par}
+    \vspace{0.35em}
+    {\color{secondary}\large\bfseries Project Report --- Machine Learning Course, Group 5\par}
+    \vspace{0.8em}
+    {\normalsize\bfseries Fatema Ferdous \normalfont(0152410052) \quad \textbf{Wafa Haque} \normalfont(0152420023) \quad \textbf{Khondoker Sazzad Sunfi} \normalfont(0152310002)\par}
+    \vspace{0.3em}
+    {\small Department of Data Science, United International University (UIU)\par}
+    \vspace{1.2em}
+    \begin{quote}
+      \small
+      \noindent \textbf{Abstract.} Polycystic ovary syndrome (PCOS) is a common endocrine disorder affecting 8--13\% of women of reproductive age worldwide, often diagnosed late due to heterogeneous clinical manifestations. We build an end-to-end machine learning pipeline on a public cohort of 541 patients (41 clinical, hormonal, physical, and ultrasound features) and compare nine classifiers under repeated stratified 10-fold cross-validation (3 repeats) plus an untouched 20\% held-out test set (109 patients). Our headline model, Stacking Ensemble with correlation-based feature selection, achieves a cross-validated ROC-AUC of 0.956 $\pm$ 0.028 and a held-out test accuracy of 0.927 (ROC-AUC 0.945, 95\% CI [0.886, 0.989]). Beyond accuracy, we demonstrate that (i) a leaky validation protocol inflates accuracy by 3.2 percentage points and F1-score by 9.0 points, (ii) most competitive algorithms are practically indistinguishable, (iii) a questionnaire-only feature tier recovers 93\% of the full model's AUC without lab or ultrasound tests, and (iv) a simple follicle-count clinical rule is a strong baseline that the ML model improves mainly by boosting sensitivity (83.3\% vs 61.1\%, recovering 8 additional cases). Explainable AI (SHAP) reveals follicle counts, skin darkening, and cycle length as primary clinical drivers.
+    \end{quote}
+    \vspace{1.2em}
+  \end{minipage}
+]
 
 \section{INTRODUCTION}
-PCOS affects a large share of women of reproductive age and is diagnosed with the Rotterdam criteria (irregular ovulation, hyperandrogenism, polycystic ovaries on ultrasound) \cite{thakre2020pcos, rotterdam2004}. Several recent papers report 98--99\% accuracy for ML-based PCOS detection on the same small public dataset, yet most do not describe how class imbalance, feature selection, and validation were handled. Our literature review of five such papers found recurring gaps: unaddressed class imbalance, possible leakage, a single train/test split, little explainability, no uncertainty estimates, and no comparison with simple clinical rules. This project closes those gaps with a carefully validated and explainable pipeline.
+Polycystic Ovary Syndrome (PCOS) affects between 8\% and 13\% of women of reproductive age worldwide, standing as the primary cause of anovulatory infertility and a major risk factor for metabolic syndrome, type 2 diabetes, and cardiovascular disease \cite{thakre2020pcos, rotterdam2004}. Clinical diagnosis relies on the 2003 Rotterdam criteria, requiring at least two of three markers: oligo/anovulation, hyperandrogenism, and polycystic ovarian morphology on pelvic ultrasound.
+
+Despite its high prevalence, up to 70\% of affected women remain undiagnosed in primary healthcare settings due to variable symptom expression, high diagnostic costs, and restricted access to ultrasound equipment in low-resource clinics. Machine learning (ML) models offer promising automated screening opportunities. However, a critical review of recent studies reveals persistent methodological flaws:
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Data Leakage:} Preprocessing steps (imputation, scaling, feature selection, and oversampling) are frequently executed across the entire dataset prior to train-test partitioning.
+    \item \textbf{Unaddressed Class Imbalance:} Class imbalance (PCOS vs. non-PCOS ratio of 1:2) is often ignored or overfitted.
+    \item \textbf{Lack of Explainability (XAI):} Black-box predictions are provided without feature-level clinical rationales.
+    \item \textbf{Single Split Evaluation:} Performance is reported on a single train/test split without uncertainty estimates.
+    \item \textbf{No Baseline Comparison:} ML models are rarely benchmarked against simple, established clinical rules.
+\end{enumerate}
+This project addresses these gaps with a leak-free, encapsulated pipeline evaluated under repeated stratified cross-validation, bootstrap confidence intervals, SHAP explainability, and cost-tiered clinical utility analysis.
+
+\begin{table}[t]
+\centering
+\caption{Cross-validated and held-out test performance.}
+\label{tab:performance}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Model & CV AUC & Test Acc. & Test Rec. & Test AUC \\
+\midrule
+\textbf{Stacking Ens.} & \textbf{0.956} & \textbf{0.927} & \textbf{0.833} & \textbf{0.945} \\
+Random Forest & 0.954 & 0.917 & 0.833 & 0.945 \\
+CatBoost & 0.952 & 0.936 & 0.889 & 0.959 \\
+Gaussian NB & 0.950 & 0.908 & 0.917 & 0.947 \\
+XGBoost & 0.949 & 0.927 & 0.861 & 0.954 \\
+Elastic-Net LR & 0.947 & 0.917 & 0.889 & 0.949 \\
+Logistic Reg. & 0.947 & 0.908 & 0.889 & 0.948 \\
+SVM (RBF) & 0.946 & 0.899 & 0.806 & 0.944 \\
+KNN & 0.927 & 0.853 & 0.778 & 0.940 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{DATA AND PREPROCESSING}
-We use the Kaggle PCOS dataset (Kottarathil \cite{kottarathil2020pcos}): 541 patients from 10 hospitals in Kerala, India, of whom 177 (32.7\%) have PCOS and 364 do not (Fig.~\ref{fig:eda}a). Row identifiers and an almost empty junk column were removed, text-coded numeric fields (e.g. AMH, $\beta$-HCG) were converted to numbers, and a binary \texttt{Cycle\_Irregular} feature was derived, giving 41 features. Missingness is below 1\% per column (Fig.~\ref{fig:eda}b), and a range check flagged 13 physiologically implausible entries (e.g. FSH $= 5052$, pulse rate $= 13$ bpm). Imputation, scaling, SMOTE, and feature selection are all fitted \emph{inside} the cross-validation pipeline so that no information from validation folds leaks into training.
+We use the Kaggle PCOS dataset (Kottarathil \cite{kottarathil2020pcos}): 541 patients from 10 hospitals in Kerala, India, of whom 177 (32.7\%) have PCOS and 364 do not (Fig.~\ref{fig:eda}a). Row identifiers and an uninformative junk column were removed, text-coded numeric fields (e.g., AMH, $\beta$-HCG) were converted to numbers, and a binary \texttt{Cycle\_Irregular} feature was derived, giving 41 features. Missingness is below 1\% per column (Fig.~\ref{fig:eda}b), and a range check flagged 13 physiologically implausible entries (e.g., FSH $= 5052$, pulse rate $= 13$ bpm). Imputation, scaling, SMOTE, and feature selection are all fitted \emph{inside} the cross-validation pipeline so that no information from validation folds leaks into training.
 
 \subsection{Exploratory findings}
 Follicle counts separate the classes best (mean 10.8 vs. 4.6 on the right ovary, Cohen's $d = 1.70$), followed by skin darkening, hair growth, and weight gain ($d \approx 1.0$--$1.1$); see Fig.~\ref{fig:eda}c and Fig.~\ref{fig:correlations}b. Cycle irregularity, fast-food intake, and AMH are also positively associated with PCOS.
@@ -84,6 +118,29 @@ Follicle counts separate the classes best (mean 10.8 vs. 4.6 on the right ovary,
 
 \begin{figure*}[t]
 \centering
+\begin{subfigure}[b]{0.31\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{reports/figures/03_target_correlations.png}
+  \caption{Target correlations}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.35\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{reports/figures/05_key_distributions.png}
+  \caption{Key feature distributions}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.31\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{reports/figures/07_follicle_separation.png}
+  \caption{Follicle count separation}
+\end{subfigure}
+\caption{Key feature distributions, target correlations, and follicle separation.}
+\label{fig:eda2}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
 \begin{subfigure}[b]{0.48\textwidth}
   \centering
   \includegraphics[width=\textwidth]{reports/figures/04_correlation_heatmap.png}
@@ -92,10 +149,10 @@ Follicle counts separate the classes best (mean 10.8 vs. 4.6 on the right ovary,
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
   \centering
-  \includegraphics[width=\textwidth]{reports/figures/07_follicle_separation.png}
-  \caption{Follicle count separation}
+  \includegraphics[width=\textwidth]{reports/figures/09_feature_set_comparison.png}
+  \caption{Feature selection methods comparison}
 \end{subfigure}
-\caption{Feature correlations and the strong class separation by follicle count.}
+\caption{Feature correlation heatmap and performance comparison of selection strategies.}
 \label{fig:correlations}
 \end{figure*}
 
@@ -104,32 +161,11 @@ Follicle counts separate the classes best (mean 10.8 vs. 4.6 on the right ovary,
 
 \textbf{Models.} Logistic Regression, Elastic-Net LR, Gaussian Naive Bayes, KNN, SVM (RBF), Random Forest, XGBoost, CatBoost, and a Stacking Ensemble.
 
-\textbf{Feature selection.} Three selectors are compared under identical CV: correlation filter (20 features), Chi-square (15), and RFE (15), plus using all features.
+\textbf{Feature selection.} Three selectors are compared under identical CV: correlation filter (20 features), Chi-square (15), and RFE (15), plus using all features (Fig.~\ref{fig:correlations}b).
 
 \textbf{Imbalance.} SMOTE inside each fold, compared with class weighting and no balancing in a 3-way ablation.
 
 \textbf{Reliability checks.} Bootstrap 95\% CIs, paired $t$-tests with a practical-significance threshold, nested CV, a 30-split seed sweep, calibration (Brier, ECE), decision-curve analysis, and SHAP explanations.
-
-\begin{table}[h]
-\centering
-\caption{Cross-validated and held-out test performance.}
-\label{tab:performance}
-\small
-\begin{tabular}{lcccc}
-\toprule
-Model & CV AUC & Test Acc. & Test Rec. & Test AUC \\
-\midrule
-\textbf{Stacking Ens.} & \textbf{0.956} & \textbf{0.927} & \textbf{0.833} & \textbf{0.945} \\
-Random Forest & 0.954 & 0.917 & 0.833 & 0.945 \\
-Gaussian NB & 0.950 & 0.908 & 0.917 & 0.947 \\
-Elastic-Net LR & 0.947 & 0.917 & 0.889 & 0.949 \\
-Logistic Reg. & 0.947 & 0.908 & 0.889 & 0.948 \\
-XGBoost & 0.949 & 0.927 & 0.861 & 0.954 \\
-SVM (RBF) & 0.946 & 0.899 & 0.806 & 0.944 \\
-KNN & 0.927 & 0.853 & 0.778 & 0.940 \\
-\bottomrule
-\end{tabular}
-\end{table}
 
 \section{RESULTS}
 
@@ -137,7 +173,7 @@ KNN & 0.927 & 0.853 & 0.778 & 0.940 \\
 The correlation-based feature set gave the best CV score, and Stacking Ensemble ranked first (CV ROC-AUC $0.956 \pm 0.028$, CV accuracy 0.894). Table~\ref{tab:performance} gives held-out test results. Stacking Ensemble reaches accuracy 0.927, precision 0.938, recall 0.833, F1 0.882, and specificity 0.973; Random Forest reaches 0.917 accuracy on this split. The test ROC-AUC of 0.945 has a 95\% bootstrap CI of $[0.886, 0.989]$, i.e. about $\pm 0.05$ because 109 patients are held out.
 
 \subsection{No clearly best algorithm}
-Paired $t$-tests across identical folds show that only KNN differs from the best model by a practically meaningful margin; every other gap is below 0.011 AUC, roughly a third of the fold-to-fold standard deviation. Several gaps are statistically significant yet clinically irrelevant (e.g. SVM, $p = 0.0001, \Delta = 0.010$). In a 30-split sweep 8 of 9 models win at least once, with Gaussian NB winning most often (27\%), so the choice of model should not be over-interpreted (Fig.~\ref{fig:validation_rigour}b,c). A 120-second AutoML search found essentially no headroom (+0.0004 test AUC), and nested CV shows a negligible optimism of 0.0017 AUC.
+Paired $t$-tests across identical folds show that only KNN differs from the best model by a practically meaningful margin; every other gap is below 0.011 AUC, roughly a third of the fold-to-fold standard deviation. Several gaps are statistically significant yet clinically irrelevant (e.g., SVM, $p = 0.0001, \Delta = 0.010$). In a 30-split sweep 8 of 9 models win at least once, with Gaussian NB winning most often (27\%), so the choice of model should not be over-interpreted (Fig.~\ref{fig:validation_rigour}b,c). A 120-second AutoML search found essentially no headroom (+0.0004 test AUC), and nested CV shows a negligible optimism of 0.0017 AUC.
 
 \subsection{The leakage experiment}
 The same pipeline was evaluated under two protocols that differ only in whether SMOTE and feature selection run before or inside the CV folds. The leaky protocol reports accuracy 0.924 versus 0.893 for the correct one (+3.2 points), recall +9.8 and F1 +9.0 points (Fig.~\ref{fig:validation_rigour}a). This shows that 98--99\% accuracies reported for this dataset without a stated protocol cannot be taken at face value. SMOTE itself did not inflate metrics: test AUC was 0.935 (no balancing), 0.928 (class weights), and 0.932 (SMOTE).
@@ -188,29 +224,58 @@ The same pipeline was evaluated under two protocols that differ only in whether 
 \label{fig:validation_rigour}
 \end{figure*}
 
-\section{EXPLAINABLE AI (SHAP)}
-SHAP ranks follicle counts (right 0.128, left 0.093 mean $|\text{SHAP}|$) first, followed by weight gain, skin darkening, hair growth, irregular cycle, and fast-food intake. All of these push the prediction toward PCOS when high, while longer cycle length and higher age push toward non-PCOS (Fig.~\ref{fig:shap}a,b). The waterfall plot explains an individual patient, which is what a clinician actually needs (Fig.~\ref{fig:shap}c).
-
 \begin{figure*}[t]
 \centering
 \begin{subfigure}[b]{0.32\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{reports/figures/11_pr_curves.png}
+  \caption{Precision-Recall curves}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.32\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{reports/figures/14_threshold_sweep.png}
+  \caption{Threshold sweep}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.32\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{reports/figures/19_calibration_curves.png}
+  \caption{Calibration curves}
+\end{subfigure}
+\caption{Precision-Recall curves, decision-threshold trade-offs, and probability calibration curves.}
+\label{fig:calibration_pr}
+\end{figure*}
+
+\section{EXPLAINABLE AI (SHAP)}
+SHAP ranks follicle counts (right 0.128, left 0.093 mean $|\text{SHAP}|$) first, followed by weight gain, skin darkening, hair growth, irregular cycle, and fast-food intake. All of these push the prediction toward PCOS when high, while longer cycle length and higher age push toward non-PCOS (Fig.~\ref{fig:shap}a,b). Waterfall plots explain individual patient predictions for both PCOS and non-PCOS cases (Fig.~\ref{fig:shap}c,d), providing clinicians with actionable diagnostic rationales.
+
+\begin{figure*}[t]
+\centering
+\begin{subfigure}[b]{0.24\textwidth}
   \centering
   \includegraphics[width=\textwidth]{reports/figures/16_shap_global_importance.png}
   \caption{Global importance}
 \end{subfigure}
 \hfill
-\begin{subfigure}[b]{0.32\textwidth}
+\begin{subfigure}[b]{0.24\textwidth}
   \centering
   \includegraphics[width=\textwidth]{reports/figures/17_shap_beeswarm.png}
   \caption{SHAP beeswarm}
 \end{subfigure}
 \hfill
-\begin{subfigure}[b]{0.32\textwidth}
+\begin{subfigure}[b]{0.24\textwidth}
   \centering
   \includegraphics[width=\textwidth]{reports/figures/18_shap_waterfall_pcos_case.png}
-  \caption{Waterfall for one PCOS patient}
+  \caption{PCOS patient waterfall}
 \end{subfigure}
-\caption{SHAP explanations of the prediction pipeline.}
+\hfill
+\begin{subfigure}[b]{0.24\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{reports/figures/18_shap_waterfall_no_pcos_case.png}
+  \caption{Non-PCOS waterfall}
+\end{subfigure}
+\caption{SHAP explainable AI plots for global feature ranking and patient-level explanations.}
 \label{fig:shap}
 \end{figure*}
 
@@ -245,31 +310,71 @@ The Rotterdam follicle rule ($\text{follicles} \ge 12$) has \emph{zero} learned 
 \label{fig:clinical_value}
 \end{figure*}
 
+\begin{figure*}[t]
+\centering
+\begin{subfigure}[b]{0.24\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{reports/figures/22_nested_cv.png}
+  \caption{Nested vs. flat CV}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.24\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{reports/figures/24_learning_curve.png}
+  \caption{Learning curve}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.24\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{reports/figures/25_bootstrap_ci.png}
+  \caption{Bootstrap 95\% CIs}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.24\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{reports/figures/28_subgroup_performance.png}
+  \caption{Subgroup performance}
+\end{subfigure}
+\caption{Robustness & clinical subgroup analysis: nested CV, learning curve, 95\% bootstrap CIs, and age/BMI subgroups.}
+\label{fig:robustness_subgroups}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{reports/figures/15_paper_comparison.png}
+  \caption{Literature comparison against reported studies}
+\end{subfigure}
+\caption{Positioning our leak-free cross-validated pipeline against 5 published literature studies.}
+\label{fig:lit_comp}
+\end{figure*}
+
 \subsection{Calibration and subgroups}
-The Stacking Ensemble gives the best-calibrated probabilities (Brier 0.081, ECE 0.032), while Gaussian NB is the worst (0.109, 0.100), so a competitive AUC does not guarantee trustworthy probabilities.
+The Stacking Ensemble gives the best-calibrated probabilities (Brier 0.081, ECE 0.032), while Gaussian NB is the worst (0.109, 0.100), so a competitive AUC does not guarantee trustworthy probabilities. Subgroup analysis across age and BMI categories confirms consistent diagnostic accuracy (Fig.~\ref{fig:robustness_subgroups}d).
 
 \section{DISCUSSION AND LIMITATIONS}
-Prior papers on this dataset report accuracies of 90.9\% to 99.3\% using a single train/test split and no explainability. Our 92.7\% test accuracy (CV $89.4 \pm 4.2\%$) is obtained under a protocol that we have shown to be leak-free, with confidence intervals, nested CV, and a held-out set.
+Prior papers on this dataset report accuracies of 90.9\% to 99.3\% using a single train/test split and no explainability (Fig.~\ref{fig:lit_comp}). Our 92.7\% test accuracy (CV $89.4 \pm 4.2\%$) is obtained under a protocol that we have shown to be leak-free, with confidence intervals, nested CV, and a held-out set.
 
-\textbf{Limitations:} (1) The dataset is small (541 patients; 109 test set), so confidence intervals are wide. (2) It has no documented treatment history, and hospital-attending patients are not a general population. (3) The data contains no ultrasound images, only extracted measurements.
+\textbf{Limitations:} (1) The dataset is small (541 patients; 109 test set), so confidence intervals are wide. (2) It has no documented treatment history, and hospital-attending patients are not a general population. (3) The data contains no raw ultrasound images, only extracted numerical measurements.
 
 \section{CONCLUSION}
 A properly validated Stacking Ensemble predicts PCOS with about 0.956 ROC-AUC and 92.7\% test accuracy using explainable features dominated by follicle count and visible symptoms. The main lessons are methodological: report the validation protocol, since leakage alone can add 3.2 points of accuracy; do not over-read small differences between algorithms; and compare against a simple clinical rule. The model's real contribution over the Rotterdam follicle rule is higher sensitivity (30 vs. 22 of 36 cases), and a questionnaire-first screening strategy retains 93\% of the predictive power at zero financial cost.
 
 \section*{REFERENCES}
 \begin{enumerate}[label={[\arabic*]}]
-    \item S. Thakre et al., ``PCOcare: PCOS Detection and Prediction using Machine Learning,'' \emph{Proc. ICDMME}, 2020.
-    \item Rotterdam ESHRE/ASRM Consensus, ``Revised 2003 consensus on diagnostic criteria for polycystic ovary syndrome,'' \emph{Hum. Reprod.}, vol. 19, no. 1, pp. 41--47, 2004.
-    \item R. Zad et al., ``A Clinical Natural Language Processing Pipeline for Automated PCOS Screening,'' \emph{JAMIA}, 2024.
-    \item S. Bhat, ``Comparative Analysis of ML Algorithms for PCOS Detection,'' 2021.
-    \item Traditional ML + DL Study, ``Machine Learning and Deep Learning for PCOS Prediction,'' 2024.
-    \item H. Elmannai et al., ``Machine Learning Models Combining with Feature Selection for PCOS Diagnosis,'' \emph{IEEE Access}, 2023.
-    \item P. Kottarathil, ``Polycystic Ovary Syndrome (PCOS) Dataset,'' \emph{Kaggle Repository}, 2020.
-    \item N. V. Chawla et al., ``SMOTE: Synthetic Minority Over-sampling Technique,'' \emph{JAIR}, vol. 16, pp. 321--357, 2002.
-    \item S. M. Lundberg and S.-I. Lee, ``A Unified Approach to Interpreting Model Predictions,'' \emph{NeurIPS}, 2017.
-    \item A. J. Vickers and E. B. Elkin, ``Decision curve analysis: a novel method for evaluating prediction models,'' \emph{Med. Decis. Making}, 2006.
-    \item F. Pedregosa et al., ``Scikit-learn: Machine Learning in Python,'' \emph{JMLR}, vol. 12, pp. 2825--2830, 2011.
-    \item T. Chen and C. Guestrin, ``XGBoost: A Scalable Tree Boosting System,'' \emph{KDD}, 2016.
+    \item \label{ref:thakre} S. Thakre et al., ``PCOcare: PCOS Detection and Prediction using Machine Learning,'' \emph{Proc. ICDMME}, 2020.
+    \item \label{ref:rotterdam} Rotterdam ESHRE/ASRM Consensus, ``Revised 2003 consensus on diagnostic criteria for polycystic ovary syndrome,'' \emph{Hum. Reprod.}, vol. 19, no. 1, pp. 41--47, 2004.
+    \item \label{ref:zad} R. Zad et al., ``A Clinical Natural Language Processing Pipeline for Automated PCOS Screening,'' \emph{JAMIA}, 2024.
+    \item \label{ref:bhat} S. Bhat, ``Comparative Analysis of ML Algorithms for PCOS Detection,'' 2021.
+    \item \label{ref:traditional} Traditional ML + DL Study, ``Machine Learning and Deep Learning for PCOS Prediction,'' 2024.
+    \item \label{ref:elmannai} H. Elmannai et al., ``Machine Learning Models Combining with Feature Selection for PCOS Diagnosis,'' \emph{IEEE Access}, 2023.
+    \item \label{ref:kottarathil} P. Kottarathil, ``Polycystic Ovary Syndrome (PCOS) Dataset,'' \emph{Kaggle Repository}, 2020.
+    \item \label{ref:smote} N. V. Chawla et al., ``SMOTE: Synthetic Minority Over-sampling Technique,'' \emph{JAIR}, vol. 16, pp. 321--357, 2002.
+    \item \label{ref:shap} S. M. Lundberg and S.-I. Lee, ``A Unified Approach to Interpreting Model Predictions,'' \emph{NeurIPS}, 2017.
+    \item \label{ref:dca} A. J. Vickers and E. B. Elkin, ``Decision curve analysis: a novel method for evaluating prediction models,'' \emph{Med. Decis. Making}, 2006.
+    \item \label{ref:sklearn} F. Pedregosa et al., ``Scikit-learn: Machine Learning in Python,'' \emph{JMLR}, vol. 12, pp. 2825--2830, 2011.
+    \item \label{ref:xgboost} T. Chen and C. Guestrin, ``XGBoost: A Scalable Tree Boosting System,'' \emph{KDD}, 2016.
 \end{enumerate}
 
 \end{document}
