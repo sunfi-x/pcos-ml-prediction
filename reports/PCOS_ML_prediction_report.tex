@@ -255,15 +255,19 @@ and weight gain ($d = 1.03$).  Conversely, traditional endocrine blood markers (
 
 \begin{figure}[t]
 \centering
-\begin{subfigure}[b]{0.48\columnwidth}
+\begin{subfigure}[b]{0.32\columnwidth}
   \includegraphics[width=\linewidth]{reports/figures/01_class_balance.png}
-  \caption{Class balance (541 patients)}
+  \caption{Class balance}
 \end{subfigure}\hfill
-\begin{subfigure}[b]{0.48\columnwidth}
+\begin{subfigure}[b]{0.32\columnwidth}
   \includegraphics[width=\linewidth]{reports/figures/07_follicle_separation.png}
-  \caption{Follicle separation ($d=1.70$)}
+  \caption{Follicles ($d=1.70$)}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.32\columnwidth}
+  \includegraphics[width=\linewidth]{reports/figures/03_target_correlations.png}
+  \caption{Feature correlations}
 \end{subfigure}
-\caption{Exploratory data analysis: (a)~Class balance showing 2.06:1 control-to-case ratio; (b)~Strong class separation in right ovary follicle count.}
+\caption{Exploratory data analysis: (a)~Class distribution showing 2.06:1 control ratio; (b)~Strong follicle count separation; (c)~Top target feature correlations.}
 \label{fig:eda}
 \end{figure}
 
@@ -462,10 +466,17 @@ validation folds.  The experiment demonstrates that methodological leakage can m
 unusually high results reported on this dataset.
 
 \begin{figure}[t]
-  \centering
-  \includegraphics[width=\columnwidth]{reports/figures/13_leakage_experiment.png}
-  \caption{Empirical measurement of performance inflation caused by data leakage.}
-  \label{fig:leakage}
+\centering
+\begin{subfigure}[b]{0.48\columnwidth}
+  \includegraphics[width=\linewidth]{reports/figures/13_leakage_experiment.png}
+  \caption{Data leakage inflation}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.48\columnwidth}
+  \includegraphics[width=\linewidth]{reports/figures/09_feature_set_comparison.png}
+  \caption{Feature selection strategies}
+\end{subfigure}
+\caption{Methodological experiments: (a)~Data leakage metric inflation; (b)~Feature selection strategies comparison.}
+\label{fig:leakage_fsel}
 \end{figure}
 
 \subsection{Feature Selection and Class Balancing Ablation}
@@ -504,7 +515,7 @@ Nested CV (outer fold selection, inner fold tuning) yielded CV AUC $0.9541 \pm 0
 AutoML benchmarking using FLAML (120s search budget) converged on a tuned Random Forest with test AUC 0.946 vs hand-built RF 0.945 ($+0.0004$),
 confirming that data quality rather than model tuning limits performance.
 
-Probability calibration analysis (Table~\ref{tab:calibration}) shows that Stacking Ensemble achieves superior probability calibration
+Probability calibration analysis (Table~\ref{tab:calibration} and Figure~\ref{fig:cal_lc}) shows that Stacking Ensemble achieves superior probability calibration
 (Brier 0.081, ECE 0.032), whereas Gaussian NB exhibits poor probability calibration (Brier 0.109, ECE 0.100) despite competitive AUC discrimination.
 
 \begin{table}[t]
@@ -528,6 +539,20 @@ Gaussian NB        & 0.109          & 0.441          & 0.100          & 0.951 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{figure}[t]
+\centering
+\begin{subfigure}[b]{0.48\columnwidth}
+  \includegraphics[width=\linewidth]{reports/figures/19_calibration_curves.png}
+  \caption{Probability calibration}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.48\columnwidth}
+  \includegraphics[width=\linewidth]{reports/figures/24_learning_curve.png}
+  \caption{Learning curve}
+\end{subfigure}
+\caption{Robustness analysis: (a)~Probability calibration reliability curves; (b)~Learning curve showing sample size scaling.}
+\label{fig:cal_lc}
+\end{figure}
 
 % ============================================================
 \section{EXPLAINABLE AI (SHAP)}
@@ -565,12 +590,23 @@ Right and left ovary follicle counts dominate global model decisions (mean $|$SH
 The alignment between influential model features and established diagnostic criteria provides a clinically interpretable pattern, although it should not
 be interpreted as evidence of causal or independent biological discovery.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\columnwidth]{reports/figures/17_shap_beeswarm.png}
-  \caption{SHAP beeswarm plot illustrating feature value impact on individual prediction log-odds.}
-  \label{fig:shap}
-\end{figure}
+\begin{figure*}[t]
+\centering
+\begin{subfigure}[b]{0.32\textwidth}
+  \includegraphics[width=\linewidth]{reports/figures/17_shap_beeswarm.png}
+  \caption{Global SHAP beeswarm}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.32\textwidth}
+  \includegraphics[width=\linewidth]{reports/figures/18_shap_waterfall_pcos_case.png}
+  \caption{PCOS patient waterfall}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.32\textwidth}
+  \includegraphics[width=\linewidth]{reports/figures/18_shap_waterfall_no_pcos_case.png}
+  \caption{Non-PCOS patient waterfall}
+\end{subfigure}
+\caption{Explainable AI (SHAP): (a)~Global feature attribution beeswarm plot; (b)~Local explanation waterfall for a true PCOS case; (c)~Local explanation waterfall for a non-PCOS control case.}
+\label{fig:shap_explanations}
+\end{figure*}
 
 % ============================================================
 \section{CLINICAL UTILITY ANALYSIS}
@@ -663,7 +699,7 @@ Among the evaluated models, KNN showed the clearest practically meaningful perfo
 FSH, LH, and AMH show Cohen's $d < 0.18$.  The blood-panel tier provided only a small incremental improvement in discrimination relative to the clinic-vitals tier.
 
 \textbf{Literature Comparison Context:}
-Among the papers reviewed for this project, reported accuracies span 90.9--99.3\% using single splits (Table~\ref{tab:literature}).
+Among the papers reviewed for this project, reported accuracies span 90.9--99.3\% using single splits (Table~\ref{tab:literature} and Figure~\ref{fig:literature}).
 Our 91.7\% test accuracy is obtained under a leak-free 30-fold protocol with bootstrap CIs.
 
 \begin{table*}[t]
@@ -685,6 +721,13 @@ Elmannai et al.\ \cite{elmannai2023} & Stacking + RFE & 98.9\% Accuracy & Single
 \bottomrule
 \end{tabular}
 \end{table*}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{reports/figures/15_paper_comparison.png}
+  \caption{Literature benchmark comparison: Reported accuracy vs leak-free cross-validated protocol.}
+  \label{fig:literature}
+\end{figure}
 
 % ============================================================
 \section{LIMITATIONS}
