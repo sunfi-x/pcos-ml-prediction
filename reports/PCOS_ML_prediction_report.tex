@@ -25,6 +25,7 @@
 \usepackage{multirow}
 \usepackage{subcaption}
 \usepackage{stfloats}
+\usepackage{placeins}
 
 % --- Color & Links --------------------------------------------
 \usepackage{xcolor}
@@ -482,7 +483,7 @@ Evaluating feature selection strategies (Table~\ref{tab:fsel}) reveals that the 
 CV AUC ($0.957$), while chi-square ($0.952$) and RFE ($0.952$) produced slightly lower scores than the all-features baseline ($0.954$).
 Using fewer measurements may reduce data-collection burden, although actual collection cost was not evaluated in this study.
 
-\begin{table}[t]
+\begin{table}[htbp]
 \centering
 \caption{Feature-selection and class-balancing ablation results for Random Forest.}
 \label{tab:fsel}
@@ -516,7 +517,7 @@ confirming that data quality rather than model tuning limits performance.
 Probability calibration analysis (Table~\ref{tab:calibration} and Figure~\ref{fig:cal_lc}) shows that Stacking Ensemble achieves superior probability calibration
 (Brier 0.081, ECE 0.032), whereas Gaussian NB exhibits poor probability calibration (Brier 0.109, ECE 0.100) despite competitive AUC discrimination.
 
-\begin{table}[t]
+\begin{table}[htbp]
 \centering
 \caption{Probability calibration metrics across evaluated models on held-out test set. Source: \texttt{calibration\_metrics.csv}.}
 \label{tab:calibration}
@@ -588,6 +589,8 @@ Right and left ovary follicle counts dominate global model decisions (mean $|$SH
 The alignment between influential model features and established diagnostic criteria provides a clinically interpretable pattern, although it should not
 be interpreted as evidence of causal or independent biological discovery.
 
+\FloatBarrier
+
 \begin{figure*}[t]
 \centering
 \begin{subfigure}[b]{0.32\textwidth}
@@ -639,13 +642,13 @@ The ultrasound-inclusive tier produced the largest incremental AUC improvement a
 \subsection{Comparison with Clinical Decision Rules}
 Table~\ref{tab:clinical} benchmarks ML models against five non-parametric clinical decision rules evaluated on identical test splits.
 
-\begin{table}[t]
+\begin{table}[htbp]
 \centering
 \caption{Comparison of machine-learning models and clinical decision rules using cross-validated AUC and held-out test-set recall and TP/FP count. Source: \texttt{clinical\_rule\_comparison.csv}.}
 \label{tab:clinical}
-\setlength{\tabcolsep}{2.5pt}
+\setlength{\tabcolsep}{2pt}
 \small
-\begin{tabular}{@{}l c c c c@{}}
+\begin{tabular}{@{}p{3.1cm} c c c c@{}}
 \toprule
 Approach Specification & Type & CV AUC & Recall & TP / FP \\
 \midrule
@@ -654,7 +657,7 @@ Stacking Ensemble        & ML & 0.951 & 0.833 & 30 / 2 \\
 \midrule
 Rotterdam Rule ($\ge 12$ Follicles) & Rule & 0.902 & 0.611 & 22 / 1 \\
 Tuned Follicle Threshold ($\ge 10$) & Rule & 0.902 & 0.722 & 26 / 8 \\
-Logistic Single-Feature (Follicle) & Rule & 0.889 & 0.750 & 27 / 8 \\
+Logistic Single-Feature & Rule & 0.889 & 0.750 & 27 / 8 \\
 Symptom Count Rule ($k \ge 3$)     & Rule & 0.857 & 0.806 & 29 / 11 \\
 Decision Tree Baseline ($d=2$)      & Rule & 0.854 & 0.583 & 21 / 0 \\
 \bottomrule
@@ -681,6 +684,8 @@ The questionnaire-only ML model (CV AUC 0.887) achieves performance competitive 
 \end{figure}
 
 Decision curve analysis \cite{vickers2006dca} demonstrates net benefit over default strategies across 5--80\% decision thresholds.
+
+\FloatBarrier
 
 % ============================================================
 \section{DISCUSSION}
