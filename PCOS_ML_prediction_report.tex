@@ -1,7 +1,6 @@
 \documentclass[conference]{IEEEtran}
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
-\usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
@@ -31,7 +30,7 @@ Email: \IEEEauthorrefmark{1}0152410052@bsds.uiu.ac.bd, \IEEEauthorrefmark{2}0152
 \maketitle
 
 \begin{abstract}
-Polycystic ovary syndrome (PCOS) is a common endocrine disorder affecting 8--13\% of women of reproductive age worldwide, often characterized by delayed diagnosis due to heterogeneous clinical manifestations. Machine learning (ML) offers promising opportunities for automated screening; however, existing studies frequently suffer from data leakage, unaddressed class imbalance, lack of explainability, and unrealistic evaluation protocols. In this paper, we develop a rigorous, leakage-free machine learning framework for PCOS prediction using a public clinical dataset of 541 patients spanning 41 clinical, hormonal, physical, and ultrasound parameters. We implement an encapsulated pipeline where data imputation, scaling, feature selection, and Synthetic Minority Over-sampling Technique (SMOTE) are refitted strictly inside cross-validation folds. Evaluating eight algorithms under repeated stratified 10-fold cross-validation and an untouched 20\% held-out test split (109 patients), our headline model (Random Forest with correlation-based feature selection) achieves a cross-validated ROC-AUC of 0.957 $\pm$ 0.017, a held-out test accuracy of 91.7\% (0.917), test ROC-AUC of 0.945 (95\% CI [0.887, 0.991]), sensitivity of 83.3\% (30/36 cases), and specificity of 95.9\% (70/73 non-cases). We quantify data leakage, demonstrating that preprocessing before splitting inflates accuracy artificially by +2.7 percentage points and F1-score by +8.3 points. Furthermore, Explainable AI (SHAP) reveals follicle counts, skin darkening, and cycle length as key clinical signals, while a cost-tiering analysis proves that a free 19-questionnaire feature tier retains 93\% of full-model performance (0.887 ROC-AUC).
+Polycystic ovary syndrome (PCOS) is a common endocrine disorder affecting 8--13\% of women of reproductive age worldwide, often diagnosed late due to heterogeneous clinical manifestations. Machine learning (ML) offers promising opportunities for automated screening; however, existing studies frequently suffer from data leakage, unaddressed class imbalance, lack of explainability, and unrealistic evaluation protocols. In this paper, we develop a rigorous, leakage-free machine learning framework for PCOS prediction using a public clinical cohort of 541 patients spanning 41 clinical, hormonal, physical, and ultrasound parameters. We implement an encapsulated pipeline where data imputation, scaling, feature selection, and Synthetic Minority Over-sampling Technique (SMOTE) are refitted strictly inside cross-validation folds. Evaluating nine algorithms under repeated stratified 10-fold cross-validation (3 repeats) and an untouched 20\% held-out test split (109 patients), our headline model (Stacking Ensemble with correlation-based feature selection) achieves a cross-validated ROC-AUC of 0.956 $\pm$ 0.028, a held-out test accuracy of 92.7\% (0.927), test ROC-AUC of 0.945 (95\% CI [0.886, 0.989]), sensitivity of 83.3\% (30/36 cases), and specificity of 97.3\% (71/73 non-cases). We quantify data leakage, demonstrating that preprocessing before splitting inflates accuracy artificially by +3.2 percentage points and F1-score by +9.0 points. Furthermore, Explainable AI (SHAP) reveals follicle counts, skin darkening, and cycle length as primary clinical drivers, while a cost-tiering analysis proves that a free 19-questionnaire feature tier retains 93\% of full-model performance (0.887 ROC-AUC).
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -61,7 +60,7 @@ We reviewed five representative published studies on PCOS machine learning predi
     \item \textbf{Bhat (2021 \cite{bhat2021pcos}):} Applied CatBoost to the Kaggle dataset, reporting 95.7\% accuracy on a single split.
     \item \textbf{Traditional ML + DL (2024 \cite{traditional2024pcos}):} Reported 99.32\% accuracy using a Stacking Classifier on a single split.
     \item \textbf{RFE + XAI (Elmannai et al., 2023 \cite{elmannai2023pcos}):} Applied RFE and SHAP with a Stacking Ensemble, reporting 98.87\% accuracy.
-\end{enumerate}
+\end{enumerate
 
 \begin{table}[htbp]
 \centering
@@ -77,7 +76,7 @@ Zad 2024 & GBT & 82.5\% & EHR Split & Yes \\
 Bhat 2021 & CatBoost & 95.7\% & Unstated & No \\
 ML+DL 2024 & Stacking & 99.3\% & Unstated & No \\
 Elmannai 2023 & Stacking & 98.9\% & Unstated & No \\
-\textbf{Ours} & \textbf{RF / Stack} & \textbf{91.7\%} & \textbf{SMOTE} & \textbf{Yes (CV)} \\
+\textbf{Ours} & \textbf{Stack / RF} & \textbf{92.7\%} & \textbf{SMOTE} & \textbf{Yes (CV)} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -108,34 +107,14 @@ To prevent data leakage, all preprocessing transformations are encapsulated insi
 $$\text{Impute} \rightarrow \text{Scale} \rightarrow \text{Select Features} \rightarrow \text{SMOTE} \rightarrow \text{Classifier}$$
 When evaluated under $K$-fold cross-validation, every fold independently fits its own median imputer, standard scaler, feature selector, and SMOTE resampler. Validation folds are never observed during preprocessing.
 
-\begin{table}[htbp]
-\centering
-\caption{Cross-validated and held-out test performance.}
-\label{tab:performance}
-\small
-\begin{tabular}{lcccc}
-\toprule
-Model & CV AUC & Test Acc. & Test Rec. & Test AUC \\
-\midrule
-\textbf{Random Forest} & \textbf{0.957} & 0.917 & 0.833 & 0.945 \\
-Stacking Ens. & 0.951 & 0.927 & 0.833 & 0.945 \\
-Gaussian NB & 0.951 & 0.908 & 0.917 & 0.947 \\
-Elastic-Net LR & 0.948 & 0.917 & 0.889 & 0.949 \\
-Logistic Reg. & 0.947 & 0.908 & 0.889 & 0.948 \\
-XGBoost & 0.944 & 0.927 & 0.861 & 0.954 \\
-SVM (RBF) & 0.939 & 0.899 & 0.806 & 0.944 \\
-KNN & 0.929 & 0.853 & 0.778 & 0.940 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
 \subsection{Feature Selection Strategies}
-We compared three feature selection methods against the full 41-feature baseline:
+We compared three feature selection methods against the full 41-feature baseline under identical cross-validation:
 \begin{enumerate}
     \item \textbf{Correlation Filter (20 features):} Keeps features with highest absolute Pearson correlation to the target ($r \ge 0.12$). Reaches best CV ROC-AUC of 0.945.
-    \item \textbf{Chi-Square ($\chi^2$) Filter (15 features):} Selects non-negative features ranked by chi-squared statistic (CV ROC-AUC 0.880).
-    \item \textbf{Recursive Feature Elimination (RFE, 15 features):} Iteratively prunes tree-importance weights (CV ROC-AUC 0.879).
+    \item \textbf{Chi-Square ($\chi^2$) Filter (15 features):} Selects non-negative features ranked by chi-squared statistic (CV ROC-AUC 0.945).
+    \item \textbf{Recursive Feature Elimination (RFE, 15 features):} Iteratively prunes tree-importance weights (CV ROC-AUC 0.938).
 \end{enumerate}
+Using 20 correlation-selected features outperforms using all 41 features (0.923 AUC), demonstrating that removing noise improves model stability and clinical economy.
 
 \subsection{Class Imbalance and SMOTE Ablation}
 We conducted a 3-way ablation to evaluate imbalance strategies:
@@ -146,57 +125,47 @@ We conducted a 3-way ablation to evaluate imbalance strategies:
 \end{itemize}
 SMOTE inside CV provided the optimal sensitivity-specificity trade-off without artificially inflating validation metrics.
 
-\section{Model Zoo and Formulations}
+\section{Model Zoo and Experimental Setup}
 
-We implemented eight diverse classification algorithms to explore distinct inductive biases:
+\subsection{Model Diversity}
+We evaluated nine classification models representing diverse algorithmic families:
+\begin{itemize}
+    \item \textbf{Ensembles:} Stacking Ensemble (meta-learner over LR, RF, SVM, XGBoost), Random Forest (400 trees), XGBoost, CatBoost.
+    \item \textbf{Linear \& Regularized:} Logistic Regression, Elastic-Net LR ($L1+L2$ penalty).
+    \item \textbf{Probabilistic \& Instance-Based:} Gaussian Naive Bayes, Support Vector Machine (SVM RBF), K-Nearest Neighbors (KNN, $k=11$).
+\end{itemize}
 
-\subsection{Logistic Regression}
-A baseline linear model predicting probability via the sigmoid function:
-$$P(y=1|x) = \sigma(w^T x + b) = \frac{1}{1 + e^{-(w^T x + b)}}$$
-Configured with \texttt{liblinear} solver and maximum 5000 iterations.
-
-\subsection{Elastic-Net Logistic Regression}
-Combines L1 (Lasso) and L2 (Ridge) penalties for embedded feature selection:
-$$\min_w \left[ \text{Loss} + \lambda \left( \alpha ||w||_1 + \frac{1-\alpha}{2} ||w||_2^2 \right) \right]$$
-Configured with \texttt{saga} solver, $\alpha = 0.5$ (L1 ratio), and $C = 1.0$.
-
-\subsection{Random Forest (Headline Model)}
-An ensemble of 400 de-correlated decision trees trained on bootstrap samples:
-$$\hat{y} = \text{mode} \left\{ h_1(x), h_2(x), \dots, h_T(x) \right\}$$
-Hyperparameters: \texttt{n\_estimators=400}, \texttt{min\_samples\_leaf=2}. Achieves top CV ROC-AUC ($0.957 \pm 0.017$).
-
-\subsection{Support Vector Machine (SVM RBF)}
-Constructs a maximum-margin hyperplane in a non-linear feature space via Radial Basis Function kernel:
-$$K(x, x') = \exp\left(-\gamma ||x - x'||^2\right)$$
-Configured with $C = 1.0$, $\gamma = \text{`scale'}$, and Platt scaling for probability estimation.
-
-\subsection{Gaussian Naive Bayes}
-Probabilistic model assuming conditional independence among features:
-$$P(y|x) \propto P(y) \prod_{i=1}^n \mathcal{N}(x_i; \mu_{iy}, \sigma_{iy}^2)$$
-Provides high recall (91.7\%) but lower precision (82.5\%).
-
-\subsection{K-Nearest Neighbors (KNN)}
-Instance-based distance-weighted classification ($k=11$):
-$$\hat{y} = \arg\max_c \sum_{i \in \mathcal{N}_k(x)} w_i \mathbb{I}(y_i = c), \quad w_i = \frac{1}{d(x, x_i)}$$
-Exhibits lowest performance due to SMOTE neighbor interpolation overlap.
-
-\subsection{XGBoost (Gradient Boosted Trees)}
-Sequentially fits 400 boosted trees to gradient residuals:
-$$\mathcal{L}^{(t)} = \sum_{i=1}^N l\left(y_i, \hat{y}_i^{(t-1)} + f_t(x_i)\right) + \Omega(f_t)$$
-Hyperparameters: \texttt{max\_depth=4}, \texttt{learning\_rate=0.05}, \texttt{subsample=0.9}. Reaches highest test ROC-AUC (0.954).
-
-\subsection{Stacking Ensemble}
-Meta-learning ensemble combining out-of-fold probability predictions of LR, RF, SVM, and XGBoost using Logistic Regression meta-classifier ($5$-fold internal CV). Delivers best calibration (Brier score 0.081, ECE 0.032) and highest specificity (97.3\%).
-
-\section{Experimental Setup}
+\subsection{Evaluation Protocol}
 \textbf{Data Partitioning:} 80\% (432 patients) reserved for cross-validation model selection; 20\% (109 patients: 36 PCOS, 73 non-PCOS) held out untouched for final evaluation (seed 42).
 \textbf{Cross-Validation:} Repeated Stratified 10-Fold CV with 3 repeats (30 evaluation folds total).
 \textbf{Metrics:} Accuracy, Precision, Recall (Sensitivity), Specificity, F1-Score, ROC-AUC, Brier Score, Expected Calibration Error (ECE), and 95\% Bootstrap Confidence Intervals (1000 resamples).
 
+\begin{table}[htbp]
+\centering
+\caption{Cross-validated and held-out test performance.}
+\label{tab:performance}
+\small
+\begin{tabular}{lccccc}
+\toprule
+Model & CV AUC & Test Acc. & Test Rec. & Test Spec. & Test AUC \\
+\midrule
+\textbf{Stacking Ens.} & \textbf{0.956} & \textbf{0.927} & \textbf{0.833} & \textbf{0.973} & \textbf{0.945} \\
+Random Forest & 0.954 & 0.917 & 0.833 & 0.959 & 0.945 \\
+CatBoost & 0.952 & 0.936 & 0.889 & 0.959 & 0.959 \\
+Gaussian NB & 0.950 & 0.908 & 0.917 & 0.904 & 0.947 \\
+XGBoost & 0.949 & 0.927 & 0.861 & 0.959 & 0.954 \\
+Elastic-Net LR & 0.947 & 0.917 & 0.889 & 0.932 & 0.949 \\
+Logistic Reg. & 0.947 & 0.908 & 0.889 & 0.918 & 0.948 \\
+SVM (RBF) & 0.946 & 0.899 & 0.806 & 0.945 & 0.944 \\
+KNN & 0.927 & 0.853 & 0.778 & 0.890 & 0.940 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Results and Analysis}
 
 \subsection{Model Performance Comparison}
-Table~\ref{tab:performance} presents cross-validated and held-out test performance across all eight models. Random Forest achieved top cross-validated ROC-AUC ($0.957 \pm 0.017$, accuracy 0.891). On the held-out test set, Random Forest attained 91.7\% accuracy, 90.9\% precision, 83.3\% recall, 87.0\% F1-score, 95.9\% specificity, and 0.945 ROC-AUC. XGBoost and Stacking Ensemble achieved 92.7\% held-out test accuracy.
+Table~\ref{tab:performance} presents cross-validated and held-out test performance across all nine models. Stacking Ensemble achieved the top cross-validated ROC-AUC ($0.956 \pm 0.028$, accuracy 0.894). On the held-out test set, Stacking Ensemble attained 92.7\% accuracy, 93.8\% precision, 83.3\% recall, 97.3\% specificity, and 0.945 ROC-AUC (95\% CI [0.886, 0.989]). Random Forest achieved identical test ROC-AUC (0.945) and recall (83.3\%), while CatBoost reached 93.6\% test accuracy.
 
 \begin{figure*}[t]
 \centering
@@ -239,22 +208,38 @@ Table~\ref{tab:performance} presents cross-validated and held-out test performan
 \end{figure*}
 
 \subsection{Quantifying Data Leakage}
-Evaluating Random Forest under a leaky protocol (SMOTE and feature selection before CV) versus our correct protocol revealed artificial inflation:
+Evaluating classifiers under a leaky protocol (SMOTE and feature selection before CV) versus our correct protocol revealed massive artificial inflation:
 \begin{itemize}
-    \item \textbf{Correct Protocol:} Accuracy 90.0\%, F1 84.5\%, ROC-AUC 0.949.
-    \item \textbf{Leaky Protocol:} Accuracy 92.7\%, F1 92.8\%, ROC-AUC 0.975.
-    \item \textbf{Inflation:} +2.7 points accuracy, +8.3 points F1-score.
+    \item \textbf{Correct Protocol:} Accuracy 89.3\%, F1 83.4\%, ROC-AUC 0.951.
+    \item \textbf{Leaky Protocol:} Accuracy 92.4\%, F1 92.4\%, ROC-AUC 0.974.
+    \item \textbf{Inflation:} +3.2 points accuracy, +9.0 points F1-score.
 \end{itemize}
-This empirical evidence explains why prior literature reporting $>98\%$ accuracy on this dataset suffers from methodological artifacts.
+This empirical measurement demonstrates that literature claims of 98--99\% accuracy on this dataset are reachable purely through methodological leakage.
 
-\subsection{Statistical Significance}
-Paired $t$-tests across 30 CV folds indicate that top-performing models (RF, Stacking, Gaussian NB, Elastic-Net LR) are statistically and practically indistinguishable ($\Delta \text{AUC} < 0.011$). Only KNN showed statistically significant underperformance ($p = 0.051, \Delta = 0.028$). A 30-split seed sweep showed 4 different models winning across random seeds (Gaussian NB 40\%, RF 30\%, Stacking 20\%, Elastic-Net 10\%), demonstrating that single-split model rankings are highly stochastic.
+\begin{table}[htbp]
+\centering
+\caption{Data leakage experiment results.}
+\label{tab:leakage}
+\small
+\begin{tabular}{lccccc}
+\toprule
+Protocol & Acc. & Prec. & Rec. & F1 & AUC \\
+\midrule
+Correct (Inside CV) & 0.893 & 0.840 & 0.831 & 0.834 & 0.951 \\
+Leaky (Before CV) & 0.924 & 0.924 & 0.929 & 0.924 & 0.974 \\
+\textbf{Inflation} & \textbf{+0.032} & \textbf{+0.083} & \textbf{+0.098} & \textbf{+0.090} & \textbf{+0.023} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\subsection{Calibration and Stability}
-Stacking Ensemble produced the best-calibrated probabilities (Brier score 0.081, ECE 0.032), whereas Gaussian NB exhibited poor calibration (ECE 0.100). Nested cross-validation confirmed minimal optimism bias ($0.0017$ ROC-AUC), proving the model is not overfitted.
+\subsection{Statistical Separability and Seed Robustness}
+Paired $t$-tests across 30 CV folds indicate that 8 of 9 models are practically indistinguishable ($\Delta \text{AUC} < 0.011$). Only KNN showed meaningful underperformance ($p < 0.0001, \Delta = 0.029$). Re-splitting the data 30 times revealed that \textbf{8 of 9 models won at least once} across random splits, with Gaussian NB winning most often (27\%), followed by Random Forest (20\%) and CatBoost (13\%). This proves single-split model rankings are stochastic coin flips.
+
+\subsection{Probability Calibration}
+Stacking Ensemble produced the best-calibrated probabilities (Brier score 0.0808, ECE 0.0328), whereas Gaussian NB exhibited the worst calibration (Brier 0.1090, ECE 0.1003) despite its strong AUC. Discrimination and calibration are uncorrelated here, highlighting the necessity of evaluating probability metrics for clinical deployment.
 
 \section{Explainable AI (SHAP)}
-Global SHAP analysis ranks follicle counts (right 0.128, left 0.093 mean $|\text{SHAP}|$) as the dominant predictor, followed by weight gain (0.066), skin darkening (0.059), hair growth (0.057), irregular cycle (0.038), and fast food intake (0.036). Elevated values for these features consistently increase PCOS log-odds. Patient-level waterfall plots provide transparent, sample-specific diagnostic rationales suitable for clinical decision support.
+Global SHAP analysis ranks follicle counts (right 0.128, left 0.093 mean $|\text{SHAP}|$) as the dominant predictor, followed by weight gain (0.066), skin darkening (0.059), hair growth (0.057), irregular cycle (0.038), and fast food intake (0.036). Elevated values for these features consistently increase PCOS log-odds. Patient-level waterfall plots provide transparent diagnostic rationales suitable for clinical decision support.
 
 \begin{figure*}[t]
 \centering
@@ -275,7 +260,7 @@ Global SHAP analysis ranks follicle counts (right 0.128, left 0.093 mean $|\text
   \includegraphics[width=\textwidth]{reports/figures/12_confusion_matrix.png}
   \caption{Confusion matrix (RF)}
 \end{subfigure}
-\caption{Model comparison, ROC curves, and test confusion matrix (Random Forest correctly detects 30/36 PCOS cases).}
+\caption{Model comparison, ROC curves, and test confusion matrix (Random Forest / Stacking correctly detects 30/36 PCOS cases).}
 \label{fig:model_performance}
 \end{figure*}
 
@@ -298,7 +283,7 @@ Global SHAP analysis ranks follicle counts (right 0.128, left 0.093 mean $|\text
   \includegraphics[width=\textwidth]{reports/figures/23_seed_sweep.png}
   \caption{30-split seed sweep}
 \end{subfigure}
-\caption{Validation rigour: leakage inflation proof, significance testing, and winner instability.}
+\caption{Validation rigour: leakage inflation proof (+3.2\% acc), significance testing, and 30-split winner instability.}
 \label{fig:validation_rigour}
 \end{figure*}
 
@@ -350,28 +335,46 @@ Global SHAP analysis ranks follicle counts (right 0.128, left 0.093 mean $|\text
 
 \section{Clinical Utility and Cost Tiers}
 
-\subsection{Benchmark vs. Rotterdam Rule}
-Benchmarking Random Forest against the unlearned Rotterdam follicle rule ($\text{follicles} \ge 12$) reveals that the clinical rule achieves a strong baseline CV ROC-AUC of 0.902. However, the rule suffers from low sensitivity (recall 61.1\%, 22/36 cases). Random Forest boosts sensitivity to 83.3\% (30/36 cases), finding \textbf{8 additional PCOS cases} at the cost of only 2 extra false alarms (3 vs 1).
+\subsection{Benchmark vs. Clinical Rotterdam Rule}
+Benchmarking Stacking Ensemble against the unlearned 2003 Rotterdam follicle rule ($\text{follicles} \ge 12$) reveals that the clinical rule reaches a strong baseline CV ROC-AUC of 0.903 with zero learned parameters (94.8\% of best ML model). However, the rule suffers from poor sensitivity (recall 61.1\%, 22/36 cases). Machine learning boosts sensitivity to 83.3\% (30/36 cases), recovering \textbf{8 additional PCOS cases} at the cost of only 1 extra false alarm (2 vs 1).
 
-\subsection{Cost-Tiered Screening}
-Evaluating feature subsets by clinical collection cost:
+\begin{table}[htbp]
+\centering
+\caption{Clinical Rotterdam rule vs. ML models.}
+\label{tab:clinical_rules}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Approach & Type & CV AUC & Test Acc. & Test Rec. \\
+\midrule
+\textbf{Stacking Ensemble} & ML & \textbf{0.953} & \textbf{0.927} & \textbf{0.833 (30/36)} \\
+Random Forest & ML & 0.951 & 0.917 & 0.833 (30/36) \\
+\textbf{Rotterdam Rule ($\ge 12$)} & Rule & \textbf{0.903} & 0.862 & \textbf{0.611 (22/36)} \\
+Decision Tree (depth 2) & Rule & 0.869 & 0.862 & 0.583 (21/36) \\
+Majority Class & Floor & 0.500 & 0.670 & 0.000 (0/36) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Cost-Tiered Screening Protocol}
+Grouping features by clinical collection cost:
 \begin{itemize}
     \item \textbf{Tier 1 (Questionnaire only, 19 feats):} CV ROC-AUC \textbf{0.887} (retains \textbf{93\%} of full model performance at zero financial cost).
     \item \textbf{Tier 2 (+ Clinical Vitals, 25 feats):} CV ROC-AUC 0.880.
-    \item \textbf{Tier 3 (+ Blood Panel, 36 feats):} CV ROC-AUC 0.890.
-    \item \textbf{Tier 4 (+ Ultrasound, All 41 feats):} CV ROC-AUC \textbf{0.952}.
+    \item \textbf{Tier 3 (+ Blood Panel, 36 feats):} CV ROC-AUC 0.890 (+0.011 gain).
+    \item \textbf{Tier 4 (+ Ultrasound, All 41 feats):} CV ROC-AUC \textbf{0.952} (+0.062 gain).
 \end{itemize}
-This supports a two-stage screening protocol: low-cost questionnaire screening first, reserving ultrasound for high-risk individuals.
+The entire 9-assay endocrine blood panel buys only +0.011 AUC over questionnaire. We recommend a two-stage screening workflow: questionnaire first, reserving ultrasound for flagged individuals.
 
 \subsection{Decision Curve Analysis}
 Decision Curve Analysis confirms positive net benefit over "treat all" and "treat none" across clinical threshold probabilities between 10\% and 50\%.
 
 \section{Discussion and Limitations}
-\textbf{Key Insights:} Our findings demonstrate that leak-free machine learning achieves reliable 91.7\% accuracy for PCOS screening, SHAP explanations align with Rotterdam clinical guidelines, and questionnaire-based pre-screening can optimize resource allocation.
+\textbf{Key Insights:} Our findings demonstrate that leak-free machine learning achieves reliable 92.7\% accuracy for PCOS screening, SHAP explanations align with Rotterdam clinical guidelines, and questionnaire-based pre-screening can optimize resource allocation.
 \textbf{Limitations:} (1) Single geographic cohort (Kerala, India; $N=541$), (2) Wide bootstrap confidence intervals due to small held-out test size ($n=109$), (3) Absence of raw ultrasound imagery for deep learning analysis, and (4) Retrospective observational design requiring prospective trial validation.
 
 \section{Conclusion}
-We presented an end-to-end, leak-free machine learning framework for PCOS prediction. Random Forest achieved 0.957 CV ROC-AUC and 91.7\% test accuracy. We demonstrated that data leakage inflates accuracy by +2.7\% and F1 by +8.3\%, SHAP provides transparent clinical decision support, and questionnaire pre-screening captures 93\% of predictive power.
+We presented an end-to-end, leak-free machine learning framework for PCOS prediction. Stacking Ensemble achieved 0.956 CV ROC-AUC and 92.7\% test accuracy. We demonstrated that data leakage inflates accuracy by +3.2\% and F1 by +9.0\%, SHAP provides transparent clinical decision support, and questionnaire pre-screening captures 93\% of predictive power.
 
 \begin{thebibliography}{12}
 \bibitem{thakre2020pcos} S. Thakre et al., ``PCOcare: PCOS Detection and Prediction using Machine Learning,'' \emph{Proc. ICDMME}, 2020.
