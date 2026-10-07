@@ -34,22 +34,17 @@
 \begin{document}
 
 \twocolumn[
-  \begin{minipage}{\textwidth}
-    \centering
-    {\color{primary}\Large\bfseries Machine Learning-Based Prediction of Polycystic Ovary Syndrome (PCOS)\par}
-    \vspace{0.35em}
-    {\color{secondary}\large\bfseries Project Report --- Machine Learning Course, Group 5\par}
-    \vspace{0.8em}
-    {\normalsize\bfseries Fatema Ferdous \normalfont(0152410052) \quad \textbf{Wafa Haque} \normalfont(0152420023) \quad \textbf{Khondoker Sazzad Sunfi} \normalfont(0152310002)\par}
-    \vspace{0.3em}
-    {\small Department of Data Science, United International University (UIU)\par}
-    \vspace{1.2em}
-    \begin{quote}
-      \small
-      \noindent \textbf{Abstract.} Polycystic ovary syndrome (PCOS) is a common endocrine disorder affecting 8--13\% of women of reproductive age worldwide, often diagnosed late due to heterogeneous clinical manifestations. We build an end-to-end machine learning pipeline on a public cohort of 541 patients (41 clinical, hormonal, physical, and ultrasound features) and compare nine classifiers under repeated stratified 10-fold cross-validation (3 repeats) plus an untouched 20\% held-out test set (109 patients). Our headline model, Stacking Ensemble with correlation-based feature selection, achieves a cross-validated ROC-AUC of 0.956 $\pm$ 0.028 and a held-out test accuracy of 0.927 (ROC-AUC 0.945, 95\% CI [0.886, 0.989]). Beyond accuracy, we demonstrate that (i) a leaky validation protocol inflates accuracy by 3.2 percentage points and F1-score by 9.0 points, (ii) most competitive algorithms are practically indistinguishable, (iii) a questionnaire-only feature tier recovers 93\% of the full model's AUC without lab or ultrasound tests, and (iv) a simple follicle-count clinical rule is a strong baseline that the ML model improves mainly by boosting sensitivity (83.3\% vs 61.1\%, recovering 8 additional cases). Explainable AI (SHAP) reveals follicle counts, skin darkening, and cycle length as primary clinical drivers.
-    \end{quote}
-    \vspace{1.2em}
-  \end{minipage}
+  \begin{center}
+    {\color{primary}\Large\bfseries Machine Learning-Based Prediction of Polycystic Ovary Syndrome (PCOS)}\\[0.35em]
+    {\color{secondary}\large\bfseries Project Report --- Machine Learning Course, Group 5}\\[0.8em]
+    {\normalsize\bfseries Fatema Ferdous \normalfont(0152410052) \quad \textbf{Wafa Haque} \normalfont(0152420023) \quad \textbf{Khondoker Sazzad Sunfi} \normalfont(0152310002)}\\[0.3em]
+    {\small Department of Data Science, United International University (UIU)}\\[1.2em]
+  \end{center}
+  \parbox{\linewidth}{%
+    \small
+    \noindent \textbf{Abstract.} Polycystic ovary syndrome (PCOS) is a common endocrine disorder affecting 8--13\% of women of reproductive age worldwide, often diagnosed late due to heterogeneous clinical manifestations. We build an end-to-end machine learning pipeline on a public cohort of 541 patients (41 clinical, hormonal, physical, and ultrasound features) and compare nine classifiers under repeated stratified 10-fold cross-validation (3 repeats) plus an untouched 20\% held-out test set (109 patients). Our headline model, Stacking Ensemble with correlation-based feature selection, achieves a cross-validated ROC-AUC of 0.956 $\pm$ 0.028 and a held-out test accuracy of 0.927 (ROC-AUC 0.945, 95\% CI [0.886, 0.989]). Beyond accuracy, we demonstrate that (i) a leaky validation protocol inflates accuracy by 3.2 percentage points and F1-score by 9.0 points, (ii) most competitive algorithms are practically indistinguishable, (iii) a questionnaire-only feature tier recovers 93\% of the full model's AUC without lab or ultrasound tests, and (iv) a simple follicle-count clinical rule is a strong baseline that the ML model improves mainly by boosting sensitivity (83.3\% vs 61.1\%, recovering 8 additional cases). Explainable AI (SHAP) reveals follicle counts, skin darkening, and cycle length as primary clinical drivers.
+  }%
+  \vspace{1.5em}
 ]
 
 \section{INTRODUCTION}
@@ -335,7 +330,7 @@ The Rotterdam follicle rule ($\text{follicles} \ge 12$) has \emph{zero} learned 
   \includegraphics[width=\textwidth]{reports/figures/28_subgroup_performance.png}
   \caption{Subgroup performance}
 \end{subfigure}
-\caption{Robustness & clinical subgroup analysis: nested CV, learning curve, 95\% bootstrap CIs, and age/BMI subgroups.}
+\caption{Robustness \& clinical subgroup analysis: nested CV, learning curve, 95\% bootstrap CIs, and age/BMI subgroups.}
 \label{fig:robustness_subgroups}
 \end{figure*}
 
