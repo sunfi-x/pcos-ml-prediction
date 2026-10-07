@@ -1,6 +1,6 @@
 % ============================================================
 %  PCOS ML Project Report — UIU Group 5
-%  Target: 6-8 pages, no separate cover page, IEEE-style
+%  Target: ~8 pages, no separate cover page, IEEE-style
 %  Compiler: pdflatex (Overleaf compatible)
 % ============================================================
 \documentclass[10pt,twocolumn,a4paper]{article}
@@ -13,7 +13,7 @@
 
 % --- Page Layout ----------------------------------------------
 \usepackage[top=0.75in,bottom=0.75in,left=0.70in,right=0.70in,
-            columnsep=0.20in]{geometry}
+            columnsep=0.22in]{geometry}
 
 % --- Math & Science -------------------------------------------
 \usepackage{amsmath,amssymb}
@@ -45,16 +45,21 @@
 
 % --- Section Formatting ---------------------------------------
 \titleformat{\section}
-  {\normalfont\normalsize\bfseries\color{primary}}
+  {\normalfont\large\bfseries\color{primary}}
   {\thesection.}{0.4em}{}
-  [\vspace{-0.5ex}{\color{primary}\rule{\linewidth}{0.4pt}}\vspace{-0.4ex}]
+  [\vspace{-0.4ex}{\color{primary}\rule{\linewidth}{0.4pt}}\vspace{-0.3ex}]
 
 \titleformat{\subsection}
-  {\normalfont\small\bfseries\color{secondary}}
+  {\normalfont\normalsize\bfseries\color{secondary}}
   {\thesubsection}{0.4em}{}
 
-\titlespacing*{\section}{0pt}{1.2ex plus .3ex minus .2ex}{0.5ex}
-\titlespacing*{\subsection}{0pt}{0.8ex plus .2ex minus .1ex}{0.3ex}
+\titleformat{\subsubsection}
+  {\normalfont\small\bfseries\color{accent}}
+  {\thesubsubsection}{0.4em}{}
+
+\titlespacing*{\section}{0pt}{1.5ex plus .4ex minus .2ex}{0.6ex}
+\titlespacing*{\subsection}{0pt}{1.0ex plus .3ex minus .2ex}{0.4ex}
+\titlespacing*{\subsubsection}{0pt}{0.8ex plus .2ex minus .1ex}{0.3ex}
 
 % --- Float Placement ------------------------------------------
 \renewcommand{\topfraction}{0.90}
@@ -66,13 +71,13 @@
 \setcounter{dbltopnumber}{4}
 
 % --- Spacing Tweaks -------------------------------------------
-\setlength{\parskip}{0.2ex}
-\setlength{\parindent}{1em}
-\setlength{\abovecaptionskip}{4pt}
-\setlength{\belowcaptionskip}{2pt}
-\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
-\setlength{\dbltextfloatsep}{8pt plus 2pt minus 2pt}
-\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\parskip}{0.3ex}
+\setlength{\parindent}{1.1em}
+\setlength{\abovecaptionskip}{5pt}
+\setlength{\belowcaptionskip}{3pt}
+\setlength{\textfloatsep}{10pt plus 3pt minus 2pt}
+\setlength{\dbltextfloatsep}{10pt plus 3pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
 
 % --- Abstract environment ------------------------------------
 \renewenvironment{abstract}{%
@@ -87,15 +92,15 @@
 % ============================================================
 \twocolumn[{%
 \begin{center}
-  {\color{primary}\Large\bfseries
+  {\color{primary}\fontsize{21pt}{25pt}\selectfont\bfseries
     Machine Learning-Based Prediction of\\[0.2em]
     Polycystic Ovary Syndrome (PCOS)\par}
-  \vspace{0.5em}
+  \vspace{0.6em}
   {\normalsize
     \textbf{Fatema Ferdous}\,(0152410052)\quad
     \textbf{Wafa Haque}\,(0152420023)\quad
     \textbf{Khondoker Sazzad Sunfi}\,(0152310002)\par}
-  \vspace{0.2em}
+  \vspace{0.3em}
   {\small Department of Data Science, United International University (UIU)\par
   \href{mailto:fatemaaonny29@gmail.com}{\texttt{fatemaaonny29@gmail.com}}\ \;
   \href{mailto:whaque2420023@bsds.uiu.ac.bd}{\texttt{whaque2420023@bsds.uiu.ac.bd}}\ \;
@@ -105,25 +110,24 @@
 \begin{abstract}
 Polycystic Ovary Syndrome (PCOS) affects 8--13\% of women of reproductive age and is
 frequently under-diagnosed due to heterogeneous symptom presentation and limited access to
-clinical testing.  This study presents a machine-learning-based screening framework trained
-on 541 patients from 10 hospitals in Kerala, India (177 PCOS, 364 non-PCOS).  Eight classifiers
-and a stacking ensemble were evaluated under 30-fold repeated stratified cross-validation
-with an untouched 20\% held-out test set (109 patients).  All preprocessing, feature selection,
-and SMOTE oversampling were encapsulated inside each fold to prevent data leakage.  The best
-cross-validated model, Random Forest with a 20-feature correlation-based subset, achieves
-CV ROC-AUC $0.957 \pm 0.017$ and held-out test AUC $0.945$ (95\% CI: $[0.887,\,0.991]$).
-A dedicated experiment shows that applying SMOTE and feature selection \emph{before} CV
-inflates accuracy by $+2.7$ pp and F1 by $+8.3$ pp on the same data.  SHAP analysis
-identifies follicle count and the hyperandrogenism symptom cluster as primary predictors,
-aligning with established diagnostic criteria.  A questionnaire-only model (no lab or
-ultrasound) recovers 93\% of the full model's AUC, suggesting a viable low-cost screening
-pathway.  This framework is intended for academic coursework; external clinical validation is
-required before any real-world deployment.
+clinical testing in resource-limited settings.  This study presents a machine-learning-based
+screening framework trained on 541 patients from 10 hospitals in Kerala, India (177 PCOS, 364 non-PCOS).
+Eight models, comprising seven core classifiers and one stacking ensemble, were evaluated under
+30-fold repeated stratified cross-validation with an untouched 20\% held-out test set (109 patients).
+All preprocessing, feature selection, and SMOTE oversampling were encapsulated inside each fold to
+prevent data leakage.  The best cross-validated model, Random Forest with a 20-feature correlation-based
+subset, achieves CV ROC-AUC $0.957 \pm 0.017$ and held-out test AUC $0.945$ (95\% CI: $[0.887,\,0.991]$).
+A dedicated leakage experiment demonstrates that applying SMOTE and feature selection \emph{before} CV
+inflates accuracy by $+2.7$ pp and F1 by $+8.3$ pp on identical data.  SHAP analysis identifies
+follicle count and the hyperandrogenism symptom cluster as primary predictors, aligning with established
+Rotterdam diagnostic criteria.  A questionnaire-only model (no lab or ultrasound) recovers 93\% of the full
+model's AUC, suggesting a viable low-cost screening pathway.  This framework is developed as an academic
+coursework prototype; external clinical validation is required before any real-world deployment.
 \end{abstract}
 \noindent\textbf{Keywords:} PCOS prediction; machine learning; SMOTE; SHAP; clinical screening; data leakage
 \vspace{0.8em}
 \hrule
-\vspace{0.6em}
+\vspace{0.8em}
 }]
 
 % ============================================================
@@ -131,45 +135,61 @@ required before any real-world deployment.
 % ============================================================
 
 \subsection{Background and Motivation}
-PCOS is the most common endocrine disorder in women of reproductive age, with a global
-prevalence of 8--13\% \cite{rotterdam2004}.  It is the primary cause of anovulatory
-infertility and carries elevated risk of metabolic syndrome, type 2 diabetes, and
-cardiovascular disease.  Diagnosis follows the 2003 Rotterdam criteria, requiring at least
-two of: oligo/anovulation, hyperandrogenism, and polycystic ovarian morphology.
-Up to 70\% of affected women remain undiagnosed in primary care \cite{zad2024} due to
-variable symptom expression, ultrasound costs, and limited endocrine testing access.
-Machine learning offers potential for automated, lower-cost screening using questionnaire
-and anthropometric data.
+Polycystic Ovary Syndrome (PCOS) represents the leading cause of anovulatory infertility and endocrine
+morbidity in women of reproductive age globally, affecting between 8\% and 13\% of women depending on the
+diagnostic criteria applied \cite{rotterdam2004}.  Beyond reproductive dysfunction, PCOS is associated
+with significant metabolic sequelae, including insulin resistance, type 2 diabetes mellitus, dyslipidaemia,
+and long-term cardiovascular risks.
+
+Clinical diagnosis in standard practice relies on the 2003 Rotterdam consensus criteria, requiring the
+presence of at least two of the following three features: (1)~oligo- or anovulation, (2)~clinical and/or
+biochemical signs of hyperandrogenism, and (3)~polycystic ovarian morphology assessed via pelvic ultrasonography.
+Despite its prevalence, up to 70\% of affected women remain undiagnosed in primary healthcare settings \cite{zad2024}.
+Diagnostic barriers are particularly pronounced in low- and middle-income regions due to variable symptom expression,
+high out-of-pocket costs for specialist endocrine assays, and limited access to trained sonographers.  Machine
+learning (ML) offers potential for automated, lower-cost decision-support tools that evaluate risk using accessible
+questionnaire and anthropometric parameters prior to tertiary clinical referral.
 
 \subsection{Research Gap and Objectives}
-Among the papers reviewed for this project on this dataset, five recurring weaknesses were identified:
-(1)~data leakage from preprocessing before cross-validation;
-(2)~unaddressed class imbalance (2.06:1 ratio);
-(3)~single train/test splits with no uncertainty quantification;
-(4)~absent explainability; and
-(5)~lack of direct comparison against established clinical decision rules.
+Among the papers reviewed for this project using this dataset or comparable clinical cohorts, five recurring
+methodological limitations were identified:
+\begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=2pt]
+  \item \textbf{Data Leakage:} Preprocessing operations (such as feature scaling, missing value imputation,
+        oversampling, and feature selection) are frequently performed on the complete dataset prior to cross-validation,
+        allowing validation fold information to contaminate model training.
+  \item \textbf{Unaddressed Class Imbalance:} The baseline class imbalance ($\approx 2.06:1$ non-PCOS to PCOS ratio) is
+        seldom systematically controlled or analyzed inside cross-validation loops.
+  \item \textbf{Single Train/Test Splits:} Performance is commonly reported from a single random train/test split,
+        yielding point estimates without statistical confidence intervals or split-variance reporting.
+  \item \textbf{Absent Explainability:} Model decisions are predominantly presented as opaque predictions without
+        feature-level attribution or clinical interpretation.
+  \item \textbf{Lack of Clinical Rule Baselines:} ML algorithms are compared against other algorithms but rarely
+        evaluated against established non-parametric clinical decision rules (e.g., Rotterdam diagnostic thresholds).
+\end{enumerate}
 
-This project addresses these gaps.  Concretely, it:
-builds a leakage-free encapsulated pipeline and \emph{measures} the inflation a leaky
-protocol produces;
-compares eight classifiers and a stacking ensemble with bootstrap confidence intervals;
-provides SHAP global and patient-level explanations;
-benchmarks ML against clinical decision rules; and
-quantifies the value of progressively cheaper feature tiers.
+This study addresses these gaps through five concrete objectives:
+(1)~construct a leak-free encapsulated pipeline and empirically measure performance inflation under leaky protocols;
+(2)~evaluate seven core classifiers and one stacking ensemble using 30-fold repeated stratified cross-validation
+and bootstrap confidence intervals;
+(3)~apply SHAP (SHapley Additive exPlanations) to provide global and patient-level model interpretability;
+(4)~benchmark ML models directly against established clinical decision rules under identical evaluation splits; and
+(5)~quantify the marginal discriminative value of progressively complex feature acquisition tiers.
 
 % ============================================================
 \section{DATASET AND PREPROCESSING}
 % ============================================================
 
-\subsection{Dataset}
-We use the public Kaggle PCOS dataset \cite{kottarathil2020pcos} from 10 hospitals in
-Kerala, India (Table~\ref{tab:dataset}).  The workbook contains 43 raw columns spanning
-clinical history, anthropometrics, vitals, an endocrine panel, and pelvic ultrasound
-measurements.
+\subsection{Dataset Description}
+This study utilizes the public Kaggle PCOS dataset compiled by Kottarathil \cite{kottarathil2020pcos}, comprising
+clinical, hormonal, and physical measurements collected across 10 hospitals in Kerala, India.
+The dataset contains records for 541 female patients, of whom 177 (32.7\%) were diagnosed with PCOS and 364 (67.3\%)
+were non-PCOS controls, reflecting an inherent class ratio of 2.06:1 (Table~\ref{tab:dataset}).
+The raw Excel workbook contains 43 columns covering patient medical history, physical vitals, blood haematology,
+detailed endocrine hormone assays, and transvaginal ultrasound follicle counts.
 
 \begin{table}[t]
 \centering
-\caption{Dataset summary.}
+\caption{Dataset properties and experimental split summary.}
 \label{tab:dataset}
 \setlength{\tabcolsep}{4pt}
 \small
@@ -177,59 +197,73 @@ measurements.
 \toprule
 Property & Value \\
 \midrule
-Total patients & 541 \\
-PCOS positive & 177\,(32.7\%) \\
-Non-PCOS & 364\,(67.3\%) \\
-Class ratio & 2.06 : 1 \\
-Features after cleaning & 41 \\
-Target & PCOS (binary 0/1) \\
-Train / Test & 432 / 109 (80/20, seed 42) \\
+Source Collection & Kottarathil (2020), 10 Hospitals (Kerala, India) \\
+Total Patients & 541 \\
+PCOS Positive & 177\,(32.7\%) \\
+Non-PCOS Controls & 364\,(67.3\%) \\
+Class Imbalance & 2.06 : 1 \\
+Cleaned Feature Set & 41 features + 1 target \\
+Target Variable & PCOS (binary 0/1) \\
+Train / Test Split & 432 / 109 patients (80/20 stratified, seed 42) \\
+Test Set Composition & 73 non-PCOS, 36 PCOS \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Data Cleaning and Engineering}
-Six defect categories were corrected: \textbf{(i)}~two text-typed numeric columns
-(\texttt{AMH} contained \texttt{"a"}; \texttt{beta-HCG II} contained \texttt{"1.99."})
-coerced via \texttt{errors="coerce"};
-\textbf{(ii)}~a near-empty column (\texttt{Unnamed: 44}, 2/541 non-null) dropped;
-\textbf{(iii)}~inconsistent column-name whitespace stripped;
-\textbf{(iv)}~an undefined cycle code (5) recoded to NaN and a binary
-\texttt{Cycle\_Irregular} feature derived from the 2/4 (regular/irregular) coding;
-\textbf{(v)}~physiologically impossible zeros for cycle length and endometrial thickness
-set to NaN; and
-\textbf{(vi)}~13 out-of-range values (e.g.\ FSH 5052\,mIU/mL, LH 2018, Vitamin D 6014,
-BP systolic 12) blanked rather than corrected.
+\subsection{Data Cleaning and Quality Control}
+Six specific data-quality defect categories were audited and resolved in \texttt{src/data.py}:
+\begin{itemize}[leftmargin=*,topsep=2pt,itemsep=2pt]
+  \item \textbf{Text-Typed Numerics:} Two continuous columns contained stray text entries (\texttt{AMH} contained
+        the character \texttt{"a"}; \texttt{beta-HCG II} contained \texttt{"1.99."}).  Both were coerced to numeric floats via
+        \texttt{pd.to\_numeric(errors="coerce")}, setting invalid entries to NaN.
+  \item \textbf{Near-Empty Columns:} The column \texttt{Unnamed: 44} contained only 2 non-null values out of 541 and was dropped.
+  \item \textbf{Whitespace Normalisation:} Leading and trailing whitespace in column header strings was stripped.
+  \item \textbf{Cycle Recoding:} The raw \texttt{Cycle(R/I)} column used codes 2 (regular) and 4 (irregular). One row contained
+        code 5 (undefined).  The column was recoded into a binary indicator \texttt{Cycle\_Irregular} ($2 \to 0$, $4 \to 1$),
+        and code 5 was coerced to NaN.
+  \item \textbf{Impossible Zero Values:} Cycle length of 0 days and endometrial thickness of 0\,mm represent recording errors rather
+        than physiological measurements and were set to NaN.
+  \item \textbf{Plausible Range Filtering:} Thirteen extreme values falling outside physiological bounds (e.g., FSH 5052\,mIU/mL,
+        LH 2018\,mIU/mL, Vitamin D 6014\,ng/mL, BP systolic 12\,mmHg) were blanked to NaN rather than manually edited, ensuring
+        imputation handles them without introducing artificial bias.
+\end{itemize}
 
-Imputation (median for continuous; mode for nominal/binary features) is performed as a
-fitted step \emph{inside} each CV fold, preventing leakage of imputation statistics.
+Missing values (under 1\% per feature) are imputed inside cross-validation folds using median imputation for continuous variables
+and mode imputation for nominal and binary indicators.
 
-\subsection{Feature Preprocessing and Selection}
-Continuous features receive median imputation then \texttt{StandardScaler};
-nominal Blood Group receives mode imputation then one-hot encoding;
-binary indicators receive mode imputation and no scaling.  Four feature-set strategies
-are compared: all features (41), correlation filter (20), $\chi^2$-top-$k$ (15),
-and Recursive Feature Elimination (15).  All selectors are scikit-learn transformers
-running inside each fold.
+\subsection{Feature Preprocessing and Feature Selection}
+Features are categorized into three pipeline transformer paths:
+continuous variables undergo median imputation followed by standardisation (\texttt{StandardScaler});
+nominal Blood Group (8 ABO/Rh categories) undergoes mode imputation followed by one-hot encoding;
+binary symptom indicators undergo mode imputation and pass through unscaled.
 
-\subsection{Exploratory Findings}
-Follicle counts dominate class separation: mean $10.76$ vs $4.64$ on the right ovary,
-Cohen's $d = 1.70$.  The hyperandrogenism symptom cluster (skin darkening $d=1.09$,
-hair growth $d=1.04$, weight gain $d=1.03$) and irregular cycle ($d=0.87$) follow.
-Hormone biomarkers (FSH, LH, TSH, prolactin) show $d < 0.18$, suggesting limited
-incremental screening value within this dataset.
+Four feature selection strategies are evaluated under identical cross-validation conditions:
+(1)~\textbf{All Features (41)} --- baseline pass-through;
+(2)~\textbf{Correlation Filter (20)} --- two-stage selection keeping features with $|\text{corr}(x, y)| \ge 0.10$ and removing
+collinear pairs ($r > 0.85$);
+(3)~\textbf{$\chi^2$-Top-$k$ (15)} --- top 15 features ranked by chi-square statistic following min-max scaling; and
+(4)~\textbf{RFE (15)} --- Recursive Feature Elimination driven by Logistic Regression.
+All feature selectors operate strictly inside cross-validation training folds as scikit-learn transformers.
+
+\subsection{Exploratory Data Analysis}
+Bivariate feature analysis demonstrates strong class separability in specific clinical subgroups (Figure~\ref{fig:eda}).
+Follicle counts exhibit the highest separation: right ovary follicle count averages $10.76$ in PCOS vs $4.64$ in non-PCOS
+(Cohen's $d = 1.70$).  Left ovary follicle count shows similar separation ($d = 1.49$).
+Binary cutaneous symptoms of hyperandrogenism follow closely: skin darkening ($d = 1.09$), hair growth ($d = 1.04$),
+and weight gain ($d = 1.03$).  Conversely, traditional endocrine blood markers (FSH, LH, TSH, prolactin) display small effect sizes
+($d < 0.18$), indicating that individual hormone assays offer limited standalone discrimination in this cohort.
 
 \begin{figure}[t]
 \centering
-\begin{subfigure}[b]{0.46\columnwidth}
+\begin{subfigure}[b]{0.48\columnwidth}
   \includegraphics[width=\linewidth]{reports/figures/01_class_balance.png}
-  \caption{Class balance}
+  \caption{Class balance (541 patients)}
 \end{subfigure}\hfill
-\begin{subfigure}[b]{0.50\columnwidth}
+\begin{subfigure}[b]{0.48\columnwidth}
   \includegraphics[width=\linewidth]{reports/figures/07_follicle_separation.png}
   \caption{Follicle separation ($d=1.70$)}
 \end{subfigure}
-\caption{Class distribution and follicle count separation.}
+\caption{Exploratory data analysis: (a)~Class balance showing 2.06:1 control-to-case ratio; (b)~Strong class separation in right ovary follicle count.}
 \label{fig:eda}
 \end{figure}
 
@@ -237,127 +271,127 @@ incremental screening value within this dataset.
 \section{METHODOLOGY}
 % ============================================================
 
-\subsection{Pipeline Architecture}
-Every model is wrapped in a single \texttt{imblearn.Pipeline}:
+\subsection{Pipeline Architecture and Encapsulation}
+To guarantee complete isolation between training and validation data, every model is constructed as a single
+scikit-learn compatible \texttt{imblearn.Pipeline}:
 \[
 \textit{Impute} \!\to\! \textit{Scale/Encode} \!\to\! \textit{Select} \!\to\! \textit{SMOTE} \!\to\! \textit{Classify}
 \]
-This structure ensures that when the pipeline is passed to \texttt{cross\_val\_score},
-every fitted step is re-estimated on each training fold only.
-\texttt{imblearn}'s pipeline is required because SMOTE modifies row counts: it must execute
-during \texttt{fit} and be skipped during \texttt{predict}.
+When evaluated via \texttt{cross\_val\_score}, scikit-learn fits every intermediate transformer exclusively on the 9
+training folds and transforms the 10th validation fold.  The \texttt{imblearn} framework is mandatory because SMOTE
+resamples row counts during \texttt{fit} while remaining inactive during \texttt{predict}.
 
-\subsection{Validation Strategy}
-The 541-patient dataset was split stratified 80/20 (seed 42).  All model development
-uses the 432-patient training pool under \textbf{repeated stratified 10-fold CV
-(3 repeats)}, yielding 30 fold scores per model.  The 109-patient test set was evaluated
-exactly once at the end.  Bootstrap 95\% CIs (2000 resamples) are reported for test metrics.
-Paired $t$-tests across identical fold scores compare each model to the reference (Random Forest),
-with a practical-significance threshold of $\Delta > 0.020$.  Because repeated CV folds overlap,
-the paired $t$-test serves as a suggestive indicator rather than an exact independent test.
+\subsection{Validation Protocol and Experimental Design}
+The 541-patient dataset was partitioned into an 80\% training pool (432 patients) and a 20\% held-out test set
+(109 patients: 73 non-PCOS, 36 PCOS) using stratified random sampling (seed 42).
+All model development, hyperparameter selection, feature selection evaluation, and resampling comparisons were conducted
+exclusively on the training pool using **repeated stratified 10-fold cross-validation (3 repeats)**, generating 30 validation
+scores per model configuration.  The held-out test set was evaluated once at final reporting.
+Bootstrap 95\% percentile confidence intervals (2000 resamples) were calculated for all held-out test metrics.
+Statistical comparisons across models utilize paired $t$-tests on the 30 paired fold scores with a practical significance threshold
+of $\Delta\,\text{AUC} > 0.020$.  Because repeated CV folds overlap, the paired $t$-test serves as a suggestive indicator rather
+than an exact independent test.
 
-\subsection{Models}
-Eight core classifiers (and one stacking ensemble) span the hypothesis space for tabular clinical data
-(Table~\ref{tab:models}).  The Stacking Ensemble uses LR, RF, SVM, and XGBoost as base
-learners with an LR meta-learner trained on 5-fold out-of-fold probabilities.
-\textit{Note: CatBoost was configured as an optional module but omitted from the primary benchmark due to execution environment dependencies.}
+\subsection{Evaluated Models}
+Seven core classifiers and one stacking ensemble were evaluated (Table~\ref{tab:models}).
+The Stacking Ensemble incorporates Logistic Regression, Random Forest, SVM (RBF), and XGBoost as base estimators,
+coupled with a Logistic Regression meta-learner fitted on 5-fold out-of-fold probability predictions.
+\textit{Note: CatBoost was configured as an optional module in the codebase but omitted from the primary benchmark due to execution environment dependencies.}
 
 \begin{table}[t]
 \centering
-\caption{Evaluated models and key hyperparameters.}
+\caption{Evaluated machine learning models and hyperparameter specifications.}
 \label{tab:models}
-\setlength{\tabcolsep}{3pt}
+\setlength{\tabcolsep}{4pt}
 \small
-\begin{tabular}{ll}
+\begin{tabular}{lp{4.2cm}}
 \toprule
-Model & Key Configuration \\
+Model & Hyperparameter Configuration \\
 \midrule
-Logistic Regression   & solver=liblinear, max\_iter=5000 \\
-Elastic-Net LR        & l1\_ratio=0.5, C=1.0 \\
-Gaussian NB           & Default (independence baseline) \\
-KNN                   & k=11, distance weights \\
-SVM (RBF)             & C=1.0, gamma=scale \\
-Random Forest         & 400 trees, min\_samples\_leaf=2 \\
-XGBoost               & 400 trees, depth=4, lr=0.05 \\
-Stacking Ensemble     & Base: LR+RF+SVM+XGB; meta: LR \\
+Logistic Regression   & \texttt{solver=liblinear}, \texttt{max\_iter=5000}, \texttt{C=1.0} \\
+Elastic-Net LR        & \texttt{penalty=elasticnet}, \texttt{solver=saga}, \texttt{l1\_ratio=0.5} \\
+Gaussian NB           & Default parameters (uncorrelated Gaussian baseline) \\
+KNN                   & \texttt{n\_neighbors=11}, \texttt{weights=distance} \\
+SVM (RBF)             & \texttt{kernel=rbf}, \texttt{C=1.0}, \texttt{gamma=scale}, \texttt{probability=True} \\
+Random Forest         & \texttt{n\_estimators=400}, \texttt{min\_samples\_leaf=2}, \texttt{n\_jobs=-1} \\
+XGBoost               & \texttt{n\_estimators=400}, \texttt{max\_depth=4}, \texttt{lr=0.05}, \texttt{subsample=0.9} \\
+Stacking Ensemble     & Base: LR, RF, SVM, XGB; Meta: LR (\texttt{cv=5}) \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Class Imbalance and Metrics}
-SMOTE ($k\_\text{neighbors}=5$) is applied inside each fold.  A three-way ablation
-compares it against class-weighting and no balancing.  Primary metric: ROC-AUC.
-Secondary: accuracy, precision, recall, F1, specificity, Brier score, ECE.
+\subsection{Class Imbalance Handling and Metrics}
+Minority class oversampling via SMOTE ($k\_\text{neighbors}=5$) was evaluated against class weighting (\texttt{class\_weight="balanced"})
+and unweighted baselines.  Primary evaluation metric is ROC-AUC.  Secondary metrics include accuracy, precision, recall (sensitivity),
+F1-score, specificity, Brier score, and Expected Calibration Error (ECE).
 
 % ============================================================
 \section{EXPERIMENTAL RESULTS}
 % ============================================================
 
-\subsection{Cross-Validated Model Comparison}
-Table~\ref{tab:cv_results} reports CV performance on the correlation feature set (20
-features), which achieved the best mean CV AUC.
+\subsection{Cross-Validated Model Performance}
+Table~\ref{tab:cv_results} summarizes cross-validated performance across the 30 evaluation folds using the top-performing
+20-feature correlation subset.
 
 \begin{table}[t]
 \centering
-\caption{Cross-validated performance (correlation set, 10-fold$\times$3 repeats,
-  training split only). Reference: Random Forest.}
+\caption{Cross-validated model performance (20 correlation features, 10-fold $\times$ 3 repeats on training set).}
 \label{tab:cv_results}
-\setlength{\tabcolsep}{3pt}
+\setlength{\tabcolsep}{4pt}
 \small
 \begin{tabular}{lcc}
 \toprule
-Model & CV AUC & CV Acc. \\
+Model & CV ROC-AUC & CV Accuracy \\
 \midrule
-\textbf{Random Forest}  & $\mathbf{0.957\pm0.017}$ & $0.891\pm0.025$ \\
-Stacking Ensemble       & $0.951\pm0.020$           & $0.896\pm0.034$ \\
-Gaussian NB             & $0.951\pm0.023$           & $0.864\pm0.045$ \\
-Elastic-Net LR          & $0.948\pm0.016$           & $0.889\pm0.026$ \\
-Logistic Regression     & $0.947\pm0.017$           & $0.880\pm0.035$ \\
-XGBoost                 & $0.944\pm0.018$           & $0.887\pm0.040$ \\
-SVM (RBF)               & $0.939\pm0.022$           & $0.882\pm0.054$ \\
-KNN                     & $0.929\pm0.037$           & $0.873\pm0.044$ \\
+\textbf{Random Forest}  & $\mathbf{0.957 \pm 0.017}$ & $0.891 \pm 0.025$ \\
+Stacking Ensemble       & $0.951 \pm 0.020$           & $0.896 \pm 0.034$ \\
+Gaussian NB             & $0.951 \pm 0.023$           & $0.864 \pm 0.045$ \\
+Elastic-Net LR          & $0.948 \pm 0.016$           & $0.889 \pm 0.026$ \\
+Logistic Regression     & $0.947 \pm 0.017$           & $0.880 \pm 0.035$ \\
+XGBoost                 & $0.944 \pm 0.018$           & $0.887 \pm 0.040$ \\
+SVM (RBF)               & $0.939 \pm 0.022$           & $0.882 \pm 0.054$ \\
+KNN                     & $0.929 \pm 0.037$           & $0.873 \pm 0.044$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Paired $t$-tests across 30 fold scores show that among the evaluated models, KNN showed
-the clearest practically meaningful performance disadvantage relative to Random Forest
-($\Delta = -0.028$).  All other gaps ($\leq 0.018$ AUC) are smaller than the fold-to-fold
-standard deviation ($\sigma = 0.017$).  In a 10-seed stability sweep, 4 of 8 models won
-at least once (Gaussian NB 40\%, RF 30\%), confirming that the CV ranking is sensitive to split noise.
+Random Forest achieved the highest cross-validated ROC-AUC ($0.957 \pm 0.017$), closely followed by the Stacking Ensemble ($0.951 \pm 0.020$)
+and Gaussian Naive Bayes ($0.951 \pm 0.023$).  Paired $t$-tests across the 30 fold scores confirm that among the evaluated models, KNN showed
+the clearest practically meaningful performance disadvantage relative to Random Forest ($\Delta = -0.028$).
+All other top model performance differences ($\le 0.018$ AUC) fall within fold-to-fold variance ($\sigma = 0.017$).
+In a 10-seed stability sweep, four distinct models won at least once (Gaussian NB 40\%, RF 30\%, Stacking 20\%, Elastic-Net 10\%),
+demonstrating that algorithm ranking is sensitive to split variance.
 
-\subsection{Held-out Test Results}
-Table~\ref{tab:test_results} reports single-pass held-out test performance.
+\subsection{Held-Out Test Set Evaluation}
+Table~\ref{tab:test_results} reports final performance on the untouched 109-patient held-out test set.
 
 \begin{table*}[t]
 \centering
-\caption{Held-out test performance (109 patients: 73 non-PCOS, 36 PCOS).
-  Ordered by test ROC-AUC.  Values verified from \texttt{test\_results.csv}.}
+\caption{Held-out test performance (109 patients: 73 non-PCOS, 36 PCOS), ordered by test ROC-AUC. Source: \texttt{test\_results.csv}.}
 \label{tab:test_results}
-\setlength{\tabcolsep}{4.5pt}
+\setlength{\tabcolsep}{6pt}
 \small
 \begin{tabular}{lccccccc}
 \toprule
-Model & Accuracy & Precision & Recall & F1 & Specificity & AUC & TP/FP \\
+Model & Accuracy & Precision & Recall & F1-Score & Specificity & Test AUC & Test TP/FP \\
 \midrule
-XGBoost            & 0.927 & 0.912 & 0.861 & 0.886 & 0.959 & 0.954 & 31/3 \\
-Elastic-Net LR     & 0.917 & 0.865 & 0.889 & 0.877 & 0.932 & 0.949 & 32/5 \\
-Logistic Reg.      & 0.908 & 0.842 & 0.889 & 0.865 & 0.918 & 0.948 & 32/6 \\
-Gaussian NB        & 0.908 & 0.825 & 0.917 & 0.868 & 0.904 & 0.947 & 33/7 \\
-Stacking Ens.      & 0.927 & 0.938 & 0.833 & 0.882 & 0.973 & 0.945 & 30/2 \\
-\textbf{Rand.\ Forest} & \textbf{0.917} & \textbf{0.909} & \textbf{0.833} & \textbf{0.870} & \textbf{0.959} & \textbf{0.945} & \textbf{30/3} \\
-SVM (RBF)          & 0.899 & 0.879 & 0.806 & 0.841 & 0.945 & 0.944 & 29/4 \\
-KNN                & 0.853 & 0.778 & 0.778 & 0.778 & 0.890 & 0.940 & 28/8 \\
+XGBoost            & 0.927 & 0.912 & 0.861 & 0.886 & 0.959 & 0.954 & 31 / 3 \\
+Elastic-Net LR     & 0.917 & 0.865 & 0.889 & 0.877 & 0.932 & 0.949 & 32 / 5 \\
+Logistic Reg.      & 0.908 & 0.842 & 0.889 & 0.865 & 0.918 & 0.948 & 32 / 6 \\
+Gaussian NB        & 0.908 & 0.825 & 0.917 & 0.868 & 0.904 & 0.947 & 33 / 7 \\
+Stacking Ensemble  & 0.927 & 0.938 & 0.833 & 0.882 & 0.973 & 0.945 & 30 / 2 \\
+\textbf{Random Forest} & \textbf{0.917} & \textbf{0.909} & \textbf{0.833} & \textbf{0.870} & \textbf{0.959} & \textbf{0.945} & \textbf{30 / 3} \\
+SVM (RBF)          & 0.899 & 0.879 & 0.806 & 0.841 & 0.945 & 0.944 & 29 / 4 \\
+KNN                & 0.853 & 0.778 & 0.778 & 0.778 & 0.890 & 0.940 & 28 / 8 \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-The CV and test rankings differ (XGBoost ranks 6th in CV, 1st on test).
-Random Forest and Stacking Ensemble are tied on test AUC (0.945); Stacking has higher
-specificity (0.973) while Gaussian NB achieves higher recall (0.917) with more false alarms.
-\textbf{Bootstrap 95\% CI (RF):} AUC $0.945\,[0.887,\,0.991]$; recall $0.833\,[0.703,\,0.944]$.
-The recall CI width ($\pm12$ pp) illustrates that a 36-positive test set cannot pin down
-sensitivity to better than $\pm12$ points.
+On the test set, XGBoost reached test AUC 0.954, while Random Forest and Stacking Ensemble both recorded test AUC 0.945.
+Stacking Ensemble achieved the highest specificity (0.973, 2 false positives), whereas Gaussian NB recorded the highest recall
+(0.917, 33/36 cases detected) alongside 7 false positives.
+Bootstrap 95\% confidence intervals for Random Forest yield: Accuracy 0.917 $[0.862, 0.963]$, Recall 0.833 $[0.703, 0.944]$, and
+Test AUC 0.945 $[0.887, 0.991]$.  The recall interval width ($\pm 12$ pp) reflects the sample-size constraints of 36 positive test cases.
 
 \begin{figure*}[t]
 \centering
@@ -373,123 +407,124 @@ sensitivity to better than $\pm12$ points.
   \includegraphics[width=\linewidth]{reports/figures/12_confusion_matrix.png}
   \caption{RF confusion matrix (30 TP, 3 FP)}
 \end{subfigure}
-\caption{Model comparison: CV boxplots, test ROC curves, and Random Forest confusion matrix.}
+\caption{Model evaluation: (a)~CV fold score boxplots; (b)~Held-out test ROC curves; (c)~Random Forest test confusion matrix.}
 \label{fig:model_perf}
 \end{figure*}
 
-\subsection{The Leakage Experiment}
+\subsection{Data Leakage Quantification}
 \label{sec:leakage}
+To quantify the impact of unencapsulated preprocessing, an identical pipeline was executed under a leaky protocol
+where SMOTE oversampling and feature selection were executed across the full dataset prior to cross-validation splits.
 
 \begin{table}[t]
 \centering
-\caption{Leakage experiment: correct vs.\ leaky protocol (same model, data, folds).
-  Verified from \texttt{leakage\_experiment.csv}.}
+\caption{Quantification of data leakage (identical model, data, and CV split structure).}
 \label{tab:leakage}
-\setlength{\tabcolsep}{3.5pt}
+\setlength{\tabcolsep}{4pt}
 \small
 \begin{tabular}{lccc}
 \toprule
-Metric & Correct & Leaky & Inflation \\
+Metric & Correct (Encapsulated) & Leaky Protocol & Performance Inflation \\
 \midrule
-Accuracy  & 0.900 & 0.927 & $+0.027$ \\
-Precision & 0.856 & 0.923 & $+0.067$ \\
-Recall    & 0.836 & 0.934 & $+0.098$ \\
-F1        & 0.845 & 0.928 & $+0.083$ \\
-ROC-AUC   & 0.949 & 0.975 & $+0.025$ \\
+Accuracy  & 0.900 & 0.927 & $+0.027$ (+2.7 pp) \\
+Precision & 0.856 & 0.923 & $+0.067$ (+6.7 pp) \\
+Recall    & 0.836 & 0.934 & $+0.098$ (+9.8 pp) \\
+F1-Score  & 0.845 & 0.928 & $+0.083$ (+8.3 pp) \\
+ROC-AUC   & 0.949 & 0.975 & $+0.025$ (+2.5 pp) \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-When SMOTE runs before the CV split, synthetic samples interpolated from training
-neighbours appear in the validation fold.  When feature selection runs before the split,
-the selector reads all 541 labels.  Table~\ref{tab:leakage} shows the inflation: +2.7 pp accuracy,
-+8.3 pp F1.  The experiment demonstrates that methodological leakage can materially inflate
-performance and may partly explain unusually high results reported on this dataset.
+Table~\ref{tab:leakage} demonstrates that unencapsulated preprocessing inflates accuracy by $+2.7$ percentage points and F1-score by $+8.3$
+percentage points on identical data.  When SMOTE operates prior to splitting, synthetic samples derived from training points leak into
+validation folds.  The experiment demonstrates that methodological leakage can materially inflate performance and may partly explain
+unusually high results reported on this dataset.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{reports/figures/13_leakage_experiment.png}
-  \caption{Leakage inflation: correct pipeline vs.\ leaky pipeline, identical data.}
+  \caption{Empirical measurement of performance inflation caused by data leakage.}
   \label{fig:leakage}
 \end{figure}
 
-\subsection{Feature Selection and Class Balancing}
-All three selection strategies outperform the all-features baseline (Table~\ref{tab:fsel}).
-Correlation and chi-square are separated by only 0.005 AUC.  15--20 measurements cost
-less to collect than 41.
+\subsection{Feature Selection and Class Balancing Ablation}
+Evaluating feature selection strategies (Table~\ref{tab:fsel}) reveals that the correlation-based selection strategy achieved the highest
+CV AUC ($0.957$), while chi-square ($0.952$) and RFE ($0.952$) produced slightly lower scores than the all-features baseline ($0.954$).
+Using fewer measurements may reduce data-collection burden, although actual collection cost was not evaluated in this study.
 
 \begin{table}[t]
 \centering
-\caption{Feature selection (RF baseline). Class balancing ablation (held-out test).}
+\caption{Feature selection strategy and class-balancing ablation results.}
 \label{tab:fsel}
-\setlength{\tabcolsep}{3pt}
+\setlength{\tabcolsep}{4pt}
 \small
 \begin{tabular}{lcccc}
 \toprule
-\multicolumn{3}{l}{\textit{Feature selection (CV AUC)}} \\
-Strategy & Feats & CV AUC & Test AUC \\
+\multicolumn{5}{l}{\textit{Feature Selection Strategy (Random Forest CV AUC)}} \\
+Strategy & Feature Count & CV AUC & Test AUC & Test Acc. \\
 \midrule
-\textbf{Correlation} & \textbf{20} & \textbf{0.957} & \textbf{0.945} \\
-Chi-square & 15 & 0.952 & 0.945 \\
-RFE        & 15 & 0.952 & 0.945 \\
-All        & 41 & 0.954 & 0.942 \\
+\textbf{Correlation Filter} & \textbf{20} & \textbf{0.957} & \textbf{0.945} & \textbf{0.917} \\
+All Features Baseline       & 41          & 0.954          & 0.942          & 0.917 \\
+Chi-Square Top-$k$          & 15          & 0.952          & 0.945          & 0.899 \\
+RFE (Logistic)              & 15          & 0.952          & 0.945          & 0.899 \\
 \midrule
-\multicolumn{3}{l}{\textit{Class balancing (test set, RF)}} \\
-Strategy & Acc & Recall & Spec \\
+\multicolumn{5}{l}{\textit{Class Balancing Ablation (Test Set, Random Forest)}} \\
+Strategy & Accuracy & Recall & Specificity & F1-Score \\
 \midrule
-SMOTE            & 0.899 & 0.833 & 0.932 \\
-Class weights    & 0.899 & 0.861 & 0.918 \\
-No balancing     & 0.908 & 0.806 & 0.959 \\
+SMOTE Oversampling  & 0.899 & 0.833 & 0.932 & 0.845 \\
+Class Weighting     & 0.899 & 0.861 & 0.918 & 0.849 \\
+Unweighted Baseline & 0.908 & 0.806 & 0.959 & 0.853 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Robustness}
-\textbf{Nested CV:} Selection bias (flat vs.\ nested) is 0.0017 AUC --- negligible.
-\textbf{AutoML:} FLAML (120s) moved test ROC-AUC by $+0.0004$ versus the hand-built pipeline.
-\textbf{Calibration:} Stacking Ensemble gives the best probability calibration
-(Brier 0.081, ECE 0.032); Gaussian NB is the worst (Brier 0.109, ECE 0.100) despite a competitive AUC.
+\subsection{Robustness and Probability Calibration}
+Nested CV (outer fold selection, inner fold tuning) yielded CV AUC $0.9541 \pm 0.020$ vs flat CV $0.9558$, indicating negligible selection bias ($0.0017$).
+AutoML benchmarking using FLAML (120s search budget) converged on a tuned Random Forest with test AUC 0.946 vs hand-built RF 0.945 ($+0.0004$),
+confirming that data quality rather than model tuning limits performance.
+Probability calibration analysis shows that Stacking Ensemble achieves superior calibration (Brier 0.081, ECE 0.032), whereas Gaussian NB exhibits
+poor probability calibration (Brier 0.109, ECE 0.100) despite competitive AUC discrimination.
 
 % ============================================================
 \section{EXPLAINABLE AI (SHAP)}
 % ============================================================
 
-SHAP decomposes each prediction into additive contributions from individual features \cite{lundberg2017shap}.
-Values are computed on the held-out test set and explain model \emph{predictions}, not biological causality.
+SHAP feature attributions were calculated on the held-out test set using \texttt{TreeExplainer} \cite{lundberg2017shap}.
+SHAP values explain model \emph{predictions} and should not be interpreted as evidence of causal or independent biological discovery.
 
 \begin{table}[t]
 \centering
-\caption{SHAP global importance: top 10 features. Source: \texttt{shap\_importance.csv}.}
+\caption{Top 10 features ranked by mean absolute SHAP value. Source: \texttt{shap\_importance.csv}.}
 \label{tab:shap}
-\setlength{\tabcolsep}{3pt}
+\setlength{\tabcolsep}{4pt}
 \small
 \begin{tabular}{lcc}
 \toprule
-Feature & Mean $|$SHAP$|$ & Direction \\
+Feature Name & Mean $|$SHAP Value$|$ & Risk Direction \\
 \midrule
-Follicle count (R) & 0.128 & $\uparrow$ PCOS \\
-Follicle count (L) & 0.093 & $\uparrow$ PCOS \\
-Weight gain        & 0.066 & $\uparrow$ PCOS \\
-Skin darkening     & 0.059 & $\uparrow$ PCOS \\
-Hair growth        & 0.057 & $\uparrow$ PCOS \\
-Irregular cycle    & 0.038 & $\uparrow$ PCOS \\
-Fast food          & 0.036 & $\uparrow$ PCOS \\
-Cycle length (days)& 0.031 & $\downarrow$ PCOS \\
-Pimples            & 0.020 & $\uparrow$ PCOS \\
-AMH                & 0.018 & $\uparrow$ PCOS \\
+Follicle count (R) & 0.128 & $\uparrow$ Increased PCOS Risk \\
+Follicle count (L) & 0.093 & $\uparrow$ Increased PCOS Risk \\
+Weight gain        & 0.066 & $\uparrow$ Increased PCOS Risk \\
+Skin darkening     & 0.059 & $\uparrow$ Increased PCOS Risk \\
+Hair growth        & 0.057 & $\uparrow$ Increased PCOS Risk \\
+Irregular cycle    & 0.038 & $\uparrow$ Increased PCOS Risk \\
+Fast food          & 0.036 & $\uparrow$ Increased PCOS Risk \\
+Cycle length (days)& 0.031 & $\downarrow$ Decreased PCOS Risk \\
+Pimples            & 0.020 & $\uparrow$ Increased PCOS Risk \\
+AMH (ng/mL)        & 0.018 & $\uparrow$ Increased PCOS Risk \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Follicle counts dominate (mean $|$SHAP$|$ 0.128 and 0.093), followed by hyperandrogenism symptoms
-and cycle irregularity.  The alignment between influential model features and established diagnostic
-criteria provides a clinically interpretable pattern, although it should not be interpreted as
-evidence of causal or independent biological discovery.
+Right and left ovary follicle counts dominate global model decisions (mean $|$SHAP$|$ 0.128 and 0.093), followed by cutaneous hyperandrogenism flags
+(weight gain 0.066, skin darkening 0.059, hair growth 0.057) and menstrual irregularity (0.038).
+The alignment between influential model features and established diagnostic criteria provides a clinically interpretable pattern, although it should not
+be interpreted as evidence of causal or independent biological discovery.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{reports/figures/17_shap_beeswarm.png}
-  \caption{SHAP beeswarm: feature contribution direction and magnitude per test patient.}
+  \caption{SHAP beeswarm plot illustrating feature value impact on individual prediction log-odds.}
   \label{fig:shap}
 \end{figure}
 
@@ -497,64 +532,65 @@ evidence of causal or independent biological discovery.
 \section{CLINICAL UTILITY ANALYSIS}
 % ============================================================
 
-\subsection{Feature Acquisition Cost Tiers}
-Features were grouped by acquisition cost (Table~\ref{tab:tiers}).
+\subsection{Feature Acquisition Tiers}
+Features were partitioned into four cumulative acquisition tiers (Table~\ref{tab:tiers}).
 
 \begin{table}[t]
 \centering
-\caption{Predictive AUC by feature tier. Source: \texttt{cost\_tiers.csv}.}
+\caption{Predictive performance across cumulative feature acquisition tiers.}
 \label{tab:tiers}
-\setlength{\tabcolsep}{3pt}
+\setlength{\tabcolsep}{4pt}
 \small
 \begin{tabular}{lccc}
 \toprule
-Tier (cumulative) & Feats & CV AUC & Marginal$\Delta$ \\
+Tier Specification & Feature Count & CV ROC-AUC & Marginal $\Delta$ AUC \\
 \midrule
-Questionnaire      & 19 & 0.887 & --- \\
-+ Clinic vitals    & 25 & 0.880 & $-0.007$ \\
-+ Blood panel      & 36 & 0.890 & $+0.011$ \\
-+ Ultrasound (all) & 41 & 0.952 & $+0.062$ \\
+1. Questionnaire Only  & 19 & 0.887 & --- \\
+2. + Clinic Vitals      & 25 & 0.880 & $-0.007$ \\
+3. + Blood Panel        & 36 & 0.890 & $+0.011$ \\
+4. + Ultrasound (All)   & 41 & 0.952 & $+0.062$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent (1)~A questionnaire alone (form, scale, tape) gives CV AUC $0.887$ --- 93\% of the full model.
-(2)~The endocrine blood panel (FSH, LH, AMH, TSH, etc.) adds only $+0.011$ AUC, demonstrating only a small incremental improvement in predictive discrimination within this dataset.
-(3)~The ultrasound-inclusive tier produced the largest incremental AUC improvement among the evaluated feature tiers ($+0.062$), introducing the dominant follicle count features.
+The questionnaire-only tier (19 self-reported/anthropometric features) achieves CV AUC 0.887 (93\% of full model AUC), offering a potential low-resource screening option.
+The laboratory blood-panel tier introduces 11 features (comprising 9 endocrine biomarker assays, the FSH/LH ratio, and random blood sugar) and adds only $+0.011$ AUC relative to the clinic-vitals tier, demonstrating only a small incremental improvement in predictive discrimination within this dataset.
+The ultrasound-inclusive tier produced the largest incremental AUC improvement among the evaluated feature tiers ($+0.062$), introducing the dominant follicle count features.
 
-\subsection{Comparison with Clinical Rules}
-Table~\ref{tab:clinical} benchmarks ML against five decision rules on the same test set.
+\subsection{Comparison with Clinical Decision Rules}
+Table~\ref{tab:clinical} benchmarks ML models against five non-parametric clinical decision rules evaluated on identical test splits.
 
 \begin{table}[t]
 \centering
 \caption{Comparison of machine-learning models and clinical decision rules using cross-validated AUC and held-out test-set recall and TP/FP count. Source: \texttt{clinical\_rule\_comparison.csv}.}
 \label{tab:clinical}
-\setlength{\tabcolsep}{3pt}
+\setlength{\tabcolsep}{4pt}
 \small
 \begin{tabular}{llccc}
 \toprule
-Approach & Type & CV AUC & Test Recall & Test TP/FP \\
+Approach Specification & Type & CV ROC-AUC & Test Recall & Test TP / FP \\
 \midrule
-Random Forest   & ML   & 0.957 & 0.833 & 30/3 \\
-Stacking Ens.   & ML   & 0.951 & 0.833 & 30/2 \\
+Random Forest Classifier & ML Model & 0.957 & 0.833 & 30 / 3 \\
+Stacking Ensemble        & ML Model & 0.951 & 0.833 & 30 / 2 \\
 \midrule
-Rotterdam ($\geq12$) & Rule & 0.902 & 0.611 & 22/1 \\
-Follicle (tuned)     & Rule & 0.902 & 0.722 & 26/8 \\
-Logistic (follicle)  & Rule & 0.889 & 0.750 & 27/8 \\
-Symptom count        & Rule & 0.857 & 0.806 & 29/11 \\
-Decision tree (d=2)  & Rule & 0.854 & 0.583 & 21/0 \\
+Rotterdam Rule ($\ge 12$ Follicles) & Clinical Rule & 0.902 & 0.611 & 22 / 1 \\
+Tuned Follicle Threshold ($\ge 10$) & Clinical Rule & 0.902 & 0.722 & 26 / 8 \\
+Logistic Single-Feature (Follicle) & Clinical Rule & 0.889 & 0.750 & 27 / 8 \\
+Symptom Count Rule ($k \ge 3$)     & Clinical Rule & 0.857 & 0.806 & 29 / 11 \\
+Decision Tree Baseline ($d=2$)      & Clinical Rule & 0.854 & 0.583 & 21 / 0 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The Rotterdam follicle rule reaches $94.3\%$ of the ML model's CV AUC.  Its weakness is sensitivity:
-it detects 22 of 36 PCOS cases, while the ML model detects 30 (8 additional cases, 2 extra false alarms).
+The Rotterdam follicle rule ($\ge 12$ follicles) achieves CV AUC 0.902 (94.3\% of ML model AUC).
+However, its sensitivity is limited (detecting 22/36 test cases).  The ML model detects 30/36 cases ($+8$ cases detected, $+2$ net false alarms).
 This trade-off may be favourable in a screening context, but its clinical value requires prospective validation.
-The questionnaire-only model (CV AUC 0.887) is competitive with the Rotterdam rule (0.902) without ultrasound.
+The questionnaire-only ML model (CV AUC 0.887) achieves performance competitive with the ultrasound Rotterdam rule (0.902) without requiring ultrasonography.
 
 \begin{figure}[t]
 \centering
 \begin{subfigure}[b]{0.48\columnwidth}
+  \import{.}
   \includegraphics[width=\linewidth]{reports/figures/27_cost_tiers.png}
   \caption{AUC by cost tier}
 \end{subfigure}\hfill
@@ -562,49 +598,46 @@ The questionnaire-only model (CV AUC 0.887) is competitive with the Rotterdam ru
   \includegraphics[width=\linewidth]{reports/figures/26_decision_curve.png}
   \caption{Decision curve (net benefit)}
 \end{subfigure}
-\caption{Clinical utility analysis: cost tiers and decision curve net benefit.}
+\caption{Clinical utility evaluation: (a)~Feature tier progression; (b)~Decision curve analysis demonstrating positive net benefit across 5--80\% thresholds.}
 \label{fig:clinical}
 \end{figure}
 
-Decision curve analysis \cite{vickers2006dca} shows positive net benefit over default strategies across 5--80\% thresholds.
+Decision curve analysis \cite{vickers2006dca} demonstrates net benefit over default strategies across 5--80\% decision thresholds.
 
 % ============================================================
 \section{DISCUSSION}
 % ============================================================
 
-\textbf{Leakage inflates results, not algorithms.}
-Protocol differences alone produce $+2.7$ pp accuracy on this dataset.  The leakage experiment shows
-high performance can be influenced by methodology.
+\textbf{Methodological Leakage vs Model Performance:}
+Protocol differences produce $+2.7$ pp accuracy inflation on this dataset.  The leakage experiment shows high performance can be influenced by methodology.
 
-\textbf{Statistical significance vs.\ practical significance.}
-Paired $t$-tests across 30 folds flag minor AUC deficits ($<0.020$) as statistically significant, but
-these are clinically small.  Among the evaluated models, KNN showed the clearest practically meaningful
-performance disadvantage relative to Random Forest.
+\textbf{Statistical vs Practical Separability:}
+Paired $t$-tests across 30 folds flag minor AUC deficits ($<0.020$) as statistically significant, but these are clinically small.
+Among the evaluated models, KNN showed the clearest practically meaningful performance disadvantage relative to Random Forest ($\Delta = -0.028$).
 
-\textbf{Blood panel vs.\ ultrasound.}
-FSH, LH, and AMH show Cohen's $d < 0.18$.  Adding nine endocrine assays buys $+0.011$ AUC; adding follicle
-counts buys $+0.062$.  For screening, the blood panel provided minimal discriminative gain relative to its measurement complexity.
+\textbf{Feature Value in Screening:}
+FSH, LH, and AMH show Cohen's $d < 0.18$.  For screening, the blood panel provided minimal discriminative gain relative to its measurement complexity.
 
-\textbf{Literature comparison.}
+\textbf{Literature Comparison Context:}
 Among the papers reviewed for this project, reported accuracies span 90.9--99.3\% using single splits (Table~\ref{tab:literature}).
-Our 91.7\% accuracy is obtained under a leak-free 30-fold protocol with bootstrap CIs.
+Our 91.7\% test accuracy is obtained under a leak-free 30-fold protocol with bootstrap CIs.
 
 \begin{table}[t]
 \centering
-\caption{Literature comparison. Source: \texttt{literature\_comparison.csv}.}
+\caption{Literature comparison of reviewed studies on the Kaggle PCOS dataset.}
 \label{tab:literature}
-\setlength{\tabcolsep}{3pt}
+\setlength{\tabcolsep}{4pt}
 \small
-\begin{tabular}{lp{1.4cm}cc}
+\begin{tabular}{lp{1.6cm}cc}
 \toprule
-Study & Best Model & Acc. & Protocol \\
+Study Citation & Best Model & Reported Accuracy / AUC & Validation Protocol \\
 \midrule
-Thakre et al.\ \cite{thakre2020pcos} & RF & 90.9\% & Single split \\
-Zad et al.\ \cite{zad2024} & GBT/MLP & AUC 0.83 & EHR held-out \\
-Bhat \cite{bhat2021} & CatBoost & 95.7\% & Single split \\
-Tech Report \cite{traditional2024} & Stacking & 99.3\% & Single split \\
-Elmannai et al.\ \cite{elmannai2023} & Stack+RFE & 98.9\% & Single split \\
-\textbf{This study} & \textbf{RF} & \textbf{91.7\%} & \textbf{30-fold, leak-free} \\
+Thakre et al.\ \cite{thakre2020pcos} & Random Forest & 90.9\% Acc. & Single 80/20 Split \\
+Zad et al.\ \cite{zad2024}           & GBT / MLP     & 0.825 AUC   & EHR Held-Out Split \\
+Bhat \cite{bhat2021}                & CatBoost      & 95.7\% Acc. & Single Split \\
+Tech Report \cite{traditional2024}   & Stacking Ens. & 99.3\% Acc. & Single Split \\
+Elmannai et al.\ \cite{elmannai2023} & Stack + RFE   & 98.9\% Acc. & Single Split \\
+\textbf{This Study}                  & \textbf{Random Forest} & \textbf{91.7\% Acc. (0.945 AUC)} & \textbf{30-Fold Leak-Free CV} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -613,13 +646,13 @@ Elmannai et al.\ \cite{elmannai2023} & Stack+RFE & 98.9\% & Single split \\
 \section{LIMITATIONS}
 % ============================================================
 
-\begin{enumerate}[leftmargin=*,topsep=1pt,itemsep=1pt,label=\arabic*.]
-\item \textbf{Predictor--label circularity.} Follicle count is a key SHAP feature \emph{and} a Rotterdam diagnostic criterion.
-\item \textbf{Small test set.} With 36 positive test cases, the 95\% CI on recall spans $\pm12$ pp.
-\item \textbf{Hospital selection bias.} PCOS prevalence is 32.7\% versus 8--13\% in the general population.
-\item \textbf{No external validation.} Generalisability to other populations is not established.
-\item \textbf{Ambiguous column semantics.} \texttt{Cycle length(days)} median is 5, suggesting bleeding duration.
-\item \textbf{Unblinded assessment.} Symptom features were recorded by clinicians making the diagnosis.
+\begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=2pt,label=\arabic*.]
+\item \textbf{Predictor--Label Circularity:} Follicle count is a key SHAP feature and a Rotterdam diagnostic criterion.
+\item \textbf{Small Test Sample Size:} With 36 positive test cases, the 95\% CI on recall spans $\pm 12$ pp.
+\item \textbf{Hospital Selection Bias:} PCOS prevalence is 32.7\% versus 8--13\% in the general population.
+\item \textbf{No External Validation:} Generalisability to independent geographic cohorts is not established.
+\item \textbf{Ambiguous Column Semantics:} \texttt{Cycle length(days)} median is 5, suggesting bleeding duration.
+\item \textbf{Unblinded Assessment:} Symptom features were recorded by clinicians making the diagnosis.
 \end{enumerate}
 
 % ============================================================
@@ -643,7 +676,7 @@ External clinical validation is required before real-world deployment.
 \section{FUTURE WORK}
 % ============================================================
 
-\begin{itemize}[leftmargin=*,topsep=1pt,itemsep=1pt]
+\begin{itemize}[leftmargin=*,topsep=2pt,itemsep=2pt]
 \item Prospective external validation on multi-centre cohorts.
 \item Integration of raw pelvic ultrasound images.
 \item Improved probability calibration methods on larger datasets.
