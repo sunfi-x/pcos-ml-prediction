@@ -1,6 +1,6 @@
 % ============================================================
 %  PCOS ML Project Report — UIU Group 5
-%  Target: 8 pages, no separate cover page, IEEE-style
+%  Target: ~8 pages, no separate cover page, IEEE-style
 %  Compiler: pdflatex (Overleaf compatible)
 % ============================================================
 \documentclass[10pt,twocolumn,a4paper]{article}
@@ -302,7 +302,7 @@ coupled with a Logistic Regression meta-learner fitted on 5-fold out-of-fold pro
 \centering
 \caption{Evaluated machine learning models and hyperparameter specifications.}
 \label{tab:models}
-\setlength{\tabcolsep}{4pt}
+\setlength{\tabcolsep}{3.5pt}
 \small
 \begin{tabular}{lp{4.2cm}}
 \toprule
@@ -398,7 +398,7 @@ The recall confidence interval width ($\pm 12$ pp) reflects the sample-size cons
 \centering
 \caption{Bootstrap 95\% confidence intervals for Random Forest on the held-out test set (2000 resamples). Source: \texttt{bootstrap\_ci.csv}.}
 \label{tab:bootstrap}
-\setlength{\tabcolsep}{6pt}
+\setlength{\tabcolsep}{5pt}
 \small
 \begin{tabular}{lccc}
 \toprule
@@ -477,7 +477,7 @@ Using fewer measurements may reduce data-collection burden, although actual coll
 \centering
 \caption{Feature-selection and class-balancing ablation results for Random Forest.}
 \label{tab:fsel}
-\setlength{\tabcolsep}{4pt}
+\setlength{\tabcolsep}{3pt}
 \small
 \begin{tabular}{lcccc}
 \toprule
@@ -511,16 +511,16 @@ Probability calibration analysis (Table~\ref{tab:calibration}) shows that Stacki
 \centering
 \caption{Probability calibration metrics across evaluated models on held-out test set. Source: \texttt{calibration\_metrics.csv}.}
 \label{tab:calibration}
-\setlength{\tabcolsep}{4pt}
+\setlength{\tabcolsep}{2.5pt}
 \small
 \begin{tabular}{lcccc}
 \toprule
 Model Name & Brier Score $\downarrow$ & Log Loss $\downarrow$ & ECE $\downarrow$ & Test AUC \\
 \midrule
-Stacking Ensemble  & \textbf{0.081} & \textbf{0.272} & \textbf{0.032} & 0.950 \\
+Stacking Ens.      & \textbf{0.081} & \textbf{0.272} & \textbf{0.032} & 0.950 \\
 Elastic-Net LR     & 0.082          & 0.282          & 0.048          & 0.945 \\
 Random Forest      & 0.083          & 0.276          & 0.061          & 0.956 \\
-Logistic Regression& 0.084          & 0.285          & 0.056          & 0.945 \\
+Logistic Reg.      & 0.084          & 0.285          & 0.056          & 0.945 \\
 SVM (RBF)          & 0.084          & 0.299          & 0.034          & 0.943 \\
 XGBoost            & 0.094          & 0.335          & 0.071          & 0.944 \\
 KNN                & 0.098          & 0.766          & 0.072          & 0.928 \\
@@ -605,27 +605,27 @@ The ultrasound-inclusive tier produced the largest incremental AUC improvement a
 \subsection{Comparison with Clinical Decision Rules}
 Table~\ref{tab:clinical} benchmarks ML models against five non-parametric clinical decision rules evaluated on identical test splits.
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering
 \caption{Comparison of machine-learning models and clinical decision rules using cross-validated AUC and held-out test-set recall and TP/FP count. Source: \texttt{clinical\_rule\_comparison.csv}.}
 \label{tab:clinical}
-\setlength{\tabcolsep}{4pt}
+\setlength{\tabcolsep}{10pt}
 \small
 \begin{tabular}{llccc}
 \toprule
-Approach Specification & Type & CV ROC-AUC & Test Recall & Test TP / FP \\
+Approach Specification & Approach Type & CV ROC-AUC & Test Recall & Test TP / FP Count \\
 \midrule
 Random Forest Classifier & ML Model & 0.957 & 0.833 & 30 / 3 \\
 Stacking Ensemble        & ML Model & 0.951 & 0.833 & 30 / 2 \\
 \midrule
-Rotterdam Rule ($\ge 12$ Follicles) & Clinical Rule & 0.902 & 0.611 & 22 / 1 \\
-Tuned Follicle Threshold ($\ge 10$) & Clinical Rule & 0.902 & 0.722 & 26 / 8 \\
-Logistic Single-Feature (Follicle) & Clinical Rule & 0.889 & 0.750 & 27 / 8 \\
-Symptom Count Rule ($k \ge 3$)     & Clinical Rule & 0.857 & 0.806 & 29 / 11 \\
-Decision Tree Baseline ($d=2$)      & Clinical Rule & 0.854 & 0.583 & 21 / 0 \\
+Rotterdam Rule ($\ge 12$ Follicles) & Clinical Decision Rule & 0.902 & 0.611 & 22 / 1 \\
+Tuned Follicle Threshold ($\ge 10$) & Clinical Decision Rule & 0.902 & 0.722 & 26 / 8 \\
+Logistic Single-Feature (Follicle) & Clinical Decision Rule & 0.889 & 0.750 & 27 / 8 \\
+Symptom Count Rule ($k \ge 3$)     & Clinical Decision Rule & 0.857 & 0.806 & 29 / 11 \\
+Decision Tree Baseline ($d=2$)      & Clinical Decision Rule & 0.854 & 0.583 & 21 / 0 \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 The Rotterdam follicle rule ($\ge 12$ follicles) achieves CV AUC 0.902 (94.3\% of ML model AUC).
 However, its sensitivity is limited (detecting 22/36 test cases).  The ML model detects 30/36 cases ($+8$ cases detected, $+2$ net false alarms).
@@ -666,25 +666,25 @@ FSH, LH, and AMH show Cohen's $d < 0.18$.  The blood-panel tier provided only a 
 Among the papers reviewed for this project, reported accuracies span 90.9--99.3\% using single splits (Table~\ref{tab:literature}).
 Our 91.7\% test accuracy is obtained under a leak-free 30-fold protocol with bootstrap CIs.
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering
 \caption{Literature comparison of reviewed studies on the Kaggle PCOS dataset.}
 \label{tab:literature}
-\setlength{\tabcolsep}{4pt}
+\setlength{\tabcolsep}{12pt}
 \small
-\begin{tabular}{lp{1.6cm}cc}
+\begin{tabular}{lp{3.5cm}cc}
 \toprule
-Study Citation & Best Model & Reported Metric & Validation Protocol \\
+Study Citation & Best Model Architecture & Reported Metric & Validation Protocol \\
 \midrule
-Thakre et al.\ \cite{thakre2020pcos} & Random Forest & 90.9\% Acc. & Single 80/20 Split \\
-Zad et al.\ \cite{zad2024}           & GBT / MLP     & 0.825 AUC   & EHR Held-Out Split \\
-Bhat \cite{bhat2021}                & CatBoost      & 95.7\% Acc. & Single Split \\
-Tech Report \cite{traditional2024}   & Stacking Ens. & 99.3\% Acc. & Single Split \\
-Elmannai et al.\ \cite{elmannai2023} & Stack + RFE   & 98.9\% Acc. & Single Split \\
+Thakre et al.\ \cite{thakre2020pcos} & Random Forest & 90.9\% Accuracy & Single 80/20 Train/Test Split \\
+Zad et al.\ \cite{zad2024}           & GBT / MLP     & 0.825 ROC-AUC  & EHR Held-Out Split \\
+Bhat \cite{bhat2021}                & CatBoost      & 95.7\% Accuracy & Single Train/Test Split \\
+Tech Report \cite{traditional2024}   & Stacking Ensemble & 99.3\% Accuracy & Single Train/Test Split \\
+Elmannai et al.\ \cite{elmannai2023} & Stacking + RFE & 98.9\% Accuracy & Single Train/Test Split \\
 \textbf{This Study}                  & \textbf{Random Forest} & \textbf{91.7\% Acc. (0.945 AUC)} & \textbf{30-Fold Leak-Free CV} \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 % ============================================================
 \section{LIMITATIONS}
