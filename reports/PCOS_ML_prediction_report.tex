@@ -191,9 +191,8 @@ detailed endocrine hormone assays, and transvaginal ultrasound follicle counts.
 \centering
 \caption{Dataset properties and experimental split summary.}
 \label{tab:dataset}
-\setlength{\tabcolsep}{4pt}
 \small
-\begin{tabular}{ll}
+\begin{tabularx}{\columnwidth}{@{}lX@{}}
 \toprule
 Property & Value \\
 \midrule
@@ -207,7 +206,7 @@ Target Variable & PCOS (binary 0/1) \\
 Train / Test Split & 432 / 109 patients (80/20 stratified, seed 42) \\
 Test Set Composition & 73 non-PCOS, 36 PCOS \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \subsection{Data Cleaning and Quality Control}
@@ -253,23 +252,23 @@ Binary cutaneous symptoms of hyperandrogenism follow closely: skin darkening ($d
 and weight gain ($d = 1.03$).  Conversely, traditional endocrine blood markers (FSH, LH, TSH, prolactin) display small effect sizes
 ($d < 0.18$), indicating that individual hormone assays offer limited standalone discrimination in this cohort.
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\begin{subfigure}[b]{0.32\columnwidth}
+\begin{subfigure}[b]{0.32\textwidth}
   \includegraphics[width=\linewidth]{reports/figures/01_class_balance.png}
   \caption{Class balance}
 \end{subfigure}\hfill
-\begin{subfigure}[b]{0.32\columnwidth}
+\begin{subfigure}[b]{0.32\textwidth}
   \includegraphics[width=\linewidth]{reports/figures/07_follicle_separation.png}
   \caption{Follicles ($d=1.70$)}
 \end{subfigure}\hfill
-\begin{subfigure}[b]{0.32\columnwidth}
+\begin{subfigure}[b]{0.32\textwidth}
   \includegraphics[width=\linewidth]{reports/figures/03_target_correlations.png}
   \caption{Feature correlations}
 \end{subfigure}
 \caption{Exploratory data analysis: (a)~Class distribution showing 2.06:1 control ratio; (b)~Strong follicle count separation; (c)~Top target feature correlations.}
 \label{fig:eda}
-\end{figure}
+\end{figure*}
 
 % ============================================================
 \section{METHODOLOGY}
@@ -306,9 +305,8 @@ coupled with a Logistic Regression meta-learner fitted on 5-fold out-of-fold pro
 \centering
 \caption{Evaluated machine learning models and hyperparameter specifications.}
 \label{tab:models}
-\setlength{\tabcolsep}{3.5pt}
 \small
-\begin{tabular}{lp{4.2cm}}
+\begin{tabularx}{\columnwidth}{@{}lX@{}}
 \toprule
 Model & Hyperparameter Configuration \\
 \midrule
@@ -321,7 +319,7 @@ Random Forest         & \texttt{n\_estimators=400}, \texttt{min\_samples\_leaf=2
 XGBoost               & \texttt{n\_estimators=400}, \texttt{max\_depth=4}, \texttt{lr=0.05}, \texttt{subsample=0.9} \\
 Stacking Ensemble     & Base: LR, RF, SVM, XGB; Meta: LR (\texttt{cv=5}) \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \subsection{Class Imbalance Handling and Metrics}
@@ -343,7 +341,7 @@ Table~\ref{tab:cv_results} summarizes cross-validated performance across the 30 
 \label{tab:cv_results}
 \setlength{\tabcolsep}{4pt}
 \small
-\begin{tabular}{lcc}
+\begin{tabular}{@{}l c c@{}}
 \toprule
 Model & CV ROC-AUC & CV Accuracy \\
 \midrule
@@ -375,7 +373,7 @@ Table~\ref{tab:test_results} reports final performance on the untouched 109-pati
 \label{tab:test_results}
 \setlength{\tabcolsep}{6pt}
 \small
-\begin{tabular}{lccccccc}
+\begin{tabular}{@{}l c c c c c c c@{}}
 \toprule
 Model & Accuracy & Precision & Recall & F1-Score & Specificity & Test AUC & Test TP/FP \\
 \midrule
@@ -402,11 +400,11 @@ The recall confidence interval width ($\pm 12$ pp) reflects the sample-size cons
 \centering
 \caption{Bootstrap 95\% confidence intervals for Random Forest on the held-out test set (2000 resamples). Source: \texttt{bootstrap\_ci.csv}.}
 \label{tab:bootstrap}
-\setlength{\tabcolsep}{5pt}
+\setlength{\tabcolsep}{3pt}
 \small
-\begin{tabular}{lccc}
+\begin{tabular}{@{}l c c c@{}}
 \toprule
-Metric & Point Estimate & 95\% Bootstrap CI & Interval Width \\
+Metric & Point Est. & 95\% Bootstrap CI & CI Width \\
 \midrule
 Accuracy    & 0.917 & [0.862, 0.963] & 0.101 \\
 Precision   & 0.909 & [0.800, 1.000] & 0.200 \\
@@ -445,11 +443,11 @@ where SMOTE oversampling and feature selection were executed across the full dat
 \centering
 \caption{Quantification of data leakage (identical model, data, and CV split structure).}
 \label{tab:leakage}
-\setlength{\tabcolsep}{4pt}
+\setlength{\tabcolsep}{3pt}
 \small
-\begin{tabular}{lccc}
+\begin{tabular}{@{}l c c c@{}}
 \toprule
-Metric & Correct (Encapsulated) & Leaky Protocol & Performance Inflation \\
+Metric & Encapsulated & Leaky & Inflation \\
 \midrule
 Accuracy  & 0.900 & 0.927 & $+0.027$ (+2.7 pp) \\
 Precision & 0.856 & 0.923 & $+0.067$ (+6.7 pp) \\
@@ -465,7 +463,7 @@ percentage points on identical data.  When SMOTE operates prior to splitting, sy
 validation folds.  The experiment demonstrates that methodological leakage can materially inflate performance and may partly explain
 unusually high results reported on this dataset.
 
-\begin{figure}[t]
+\begin{figure}[htbp]
 \centering
 \begin{subfigure}[b]{0.48\columnwidth}
   \includegraphics[width=\linewidth]{reports/figures/13_leakage_experiment.png}
@@ -488,12 +486,12 @@ Using fewer measurements may reduce data-collection burden, although actual coll
 \centering
 \caption{Feature-selection and class-balancing ablation results for Random Forest.}
 \label{tab:fsel}
-\setlength{\tabcolsep}{3pt}
+\setlength{\tabcolsep}{2.5pt}
 \small
-\begin{tabular}{lcccc}
+\begin{tabular}{@{}l c c c c@{}}
 \toprule
-\multicolumn{5}{l}{\textit{Feature Selection Strategy (Random Forest CV AUC)}} \\
-Strategy & Feature Count & CV AUC & Test AUC & Test Acc. \\
+\multicolumn{5}{l}{\textit{Feature Selection Strategy (Random Forest)}} \\
+Strategy & Features & CV AUC & Test AUC & Test Acc. \\
 \midrule
 \textbf{Correlation Filter} & \textbf{20} & \textbf{0.957} & \textbf{0.945} & \textbf{0.917} \\
 All Features Baseline       & 41          & 0.954          & 0.942          & 0.917 \\
@@ -522,11 +520,11 @@ Probability calibration analysis (Table~\ref{tab:calibration} and Figure~\ref{fi
 \centering
 \caption{Probability calibration metrics across evaluated models on held-out test set. Source: \texttt{calibration\_metrics.csv}.}
 \label{tab:calibration}
-\setlength{\tabcolsep}{2.5pt}
+\setlength{\tabcolsep}{2pt}
 \small
-\begin{tabular}{lcccc}
+\begin{tabular}{@{}l c c c c@{}}
 \toprule
-Model Name & Brier Score $\downarrow$ & Log Loss $\downarrow$ & ECE $\downarrow$ & Test AUC \\
+Model & Brier $\downarrow$ & LogLoss $\downarrow$ & ECE $\downarrow$ & Test AUC \\
 \midrule
 Stacking Ens.      & \textbf{0.081} & \textbf{0.272} & \textbf{0.032} & 0.950 \\
 Elastic-Net LR     & 0.082          & 0.282          & 0.048          & 0.945 \\
@@ -540,7 +538,7 @@ Gaussian NB        & 0.109          & 0.441          & 0.100          & 0.951 \\
 \end{tabular}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure}[htbp]
 \centering
 \begin{subfigure}[b]{0.48\columnwidth}
   \includegraphics[width=\linewidth]{reports/figures/19_calibration_curves.png}
@@ -565,22 +563,22 @@ SHAP values explain model \emph{predictions} and should not be interpreted as ev
 \centering
 \caption{Top 10 features ranked by mean absolute SHAP value. Source: \texttt{shap\_importance.csv}.}
 \label{tab:shap}
-\setlength{\tabcolsep}{4pt}
+\setlength{\tabcolsep}{3.5pt}
 \small
-\begin{tabular}{lcc}
+\begin{tabular}{@{}l c c@{}}
 \toprule
-Feature Name & Mean $|$SHAP Value$|$ & Risk Direction \\
+Feature Name & Mean $|$SHAP$|$ & Risk Effect \\
 \midrule
-Follicle count (R) & 0.128 & $\uparrow$ Increased PCOS Risk \\
-Follicle count (L) & 0.093 & $\uparrow$ Increased PCOS Risk \\
-Weight gain        & 0.066 & $\uparrow$ Increased PCOS Risk \\
-Skin darkening     & 0.059 & $\uparrow$ Increased PCOS Risk \\
-Hair growth        & 0.057 & $\uparrow$ Increased PCOS Risk \\
-Irregular cycle    & 0.038 & $\uparrow$ Increased PCOS Risk \\
-Fast food          & 0.036 & $\uparrow$ Increased PCOS Risk \\
-Cycle length (days)& 0.031 & $\downarrow$ Decreased PCOS Risk \\
-Pimples            & 0.020 & $\uparrow$ Increased PCOS Risk \\
-AMH (ng/mL)        & 0.018 & $\uparrow$ Increased PCOS Risk \\
+Follicle count (R) & 0.128 & $\uparrow$ Increased Risk \\
+Follicle count (L) & 0.093 & $\uparrow$ Increased Risk \\
+Weight gain        & 0.066 & $\uparrow$ Increased Risk \\
+Skin darkening     & 0.059 & $\uparrow$ Increased Risk \\
+Hair growth        & 0.057 & $\uparrow$ Increased Risk \\
+Irregular cycle    & 0.038 & $\uparrow$ Increased Risk \\
+Fast food          & 0.036 & $\uparrow$ Increased Risk \\
+Cycle length (days)& 0.031 & $\downarrow$ Decreased Risk \\
+Pimples            & 0.020 & $\uparrow$ Increased Risk \\
+AMH (ng/mL)        & 0.018 & $\uparrow$ Increased Risk \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -619,18 +617,18 @@ Features were partitioned into four cumulative acquisition tiers (Table~\ref{tab
 \centering
 \caption{Predictive performance across cumulative feature acquisition tiers using Random Forest.}
 \label{tab:tiers}
-\setlength{\tabcolsep}{4pt}
+\setlength{\tabcolsep}{3.5pt}
 \small
-\begin{tabular}{lccc}
+\begin{tabular}{@{}l c c c@{}}
 \toprule
-Tier Specification & Feature Count & CV ROC-AUC & Marginal $\Delta$ AUC$^*$ \\
+Acquisition Tier & Features & CV AUC & $\Delta$ AUC$^*$ \\
 \midrule
 1. Questionnaire Only  & 19 & 0.887 & --- \\
 2. + Clinic Vitals      & 25 & 0.880 & $-0.007$ \\
 3. + Blood Panel        & 36 & 0.890 & $+0.010^*$ \\
 4. + Ultrasound (All)   & 41 & 0.952 & $+0.062$ \\
 \bottomrule
-\multicolumn{4}{l}{\footnotesize $^*$Marginal changes are calculated from unrounded AUC values; displayed AUCs are rounded.}
+\multicolumn{4}{l}{\footnotesize $^*$Marginal changes from unrounded AUC values.}
 \end{tabular}
 \end{table}
 
@@ -645,9 +643,9 @@ Table~\ref{tab:clinical} benchmarks ML models against five non-parametric clinic
 \centering
 \caption{Comparison of machine-learning models and clinical decision rules using cross-validated AUC and held-out test-set recall and TP/FP count. Source: \texttt{clinical\_rule\_comparison.csv}.}
 \label{tab:clinical}
-\setlength{\tabcolsep}{10pt}
+\setlength{\tabcolsep}{8pt}
 \small
-\begin{tabular}{llccc}
+\begin{tabular}{@{}l l c c c@{}}
 \toprule
 Approach Specification & Approach Type & CV ROC-AUC & Test Recall & Test TP / FP Count \\
 \midrule
@@ -668,7 +666,7 @@ However, its sensitivity is limited (detecting 22/36 test cases).  The ML model 
 This trade-off may be favourable in a screening context, but its clinical value requires prospective validation.
 The questionnaire-only ML model (CV AUC 0.887) achieves performance competitive with the ultrasound Rotterdam rule (0.902) without requiring ultrasonography.
 
-\begin{figure}[t]
+\begin{figure}[htbp]
 \centering
 \begin{subfigure}[b]{0.48\columnwidth}
   \includegraphics[width=\linewidth]{reports/figures/27_cost_tiers.png}
@@ -706,9 +704,9 @@ Our 91.7\% test accuracy is obtained under a leak-free 30-fold protocol with boo
 \centering
 \caption{Literature comparison of reviewed studies on the Kaggle PCOS dataset.}
 \label{tab:literature}
-\setlength{\tabcolsep}{12pt}
+\setlength{\tabcolsep}{10pt}
 \small
-\begin{tabular}{lp{3.5cm}cc}
+\begin{tabular}{@{}l p{3.5cm} c c@{}}
 \toprule
 Study Citation & Best Model Architecture & Reported Metric & Validation Protocol \\
 \midrule
@@ -722,7 +720,7 @@ Elmannai et al.\ \cite{elmannai2023} & Stacking + RFE & 98.9\% Accuracy & Single
 \end{tabular}
 \end{table*}
 
-\begin{figure}[t]
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=\columnwidth]{reports/figures/15_paper_comparison.png}
   \caption{Literature benchmark comparison: Reported accuracy vs leak-free cross-validated protocol.}
