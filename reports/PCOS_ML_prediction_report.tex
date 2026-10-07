@@ -1,4 +1,4 @@
-\documentclass[twocolumn,10pt,a4paper]{article}
+\documentclass[10pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[margin=0.65in,top=0.7in,bottom=0.7in]{geometry}
 \usepackage{amsmath,amssymb,amsfonts}
@@ -17,19 +17,25 @@
     urlcolor=blue
 }
 
+\title{\Large\textbf{Machine Learning-Based Prediction of Polycystic Ovary Syndrome (PCOS)}\\[0.3em]
+\large Project Report --- Machine Learning Course, Group 5}
+
+\author{\textbf{Fatema Ferdous} (0152410052) \quad \textbf{Wafa Haque} (0152420023) \quad \textbf{Khondoker Sazzad Sunfi} (0152310002)\\[0.2em]
+\small Department of Data Science, United International University (UIU)}
+
+\date{}
+
 \begin{document}
 
-\twocolumn[
-  \begin{center}
-    {\Large \textbf{Machine Learning-Based Prediction of Polycystic Ovary Syndrome (PCOS)}}\\[0.4em]
-    {\large \textbf{Project Report --- Machine Learning Course, Group 5}}\\[0.8em]
-    {\textbf{Fatema Ferdous} (0152410052) \quad \textbf{Wafa Haque} (0152420023) \quad \textbf{Khondoker Sazzad Sunfi} (0152310002)}\\[0.3em]
-    {\small Department of Data Science, United International University (UIU)}\\[1.2em]
-  \end{center}
-  {\small
-  \noindent \textbf{Abstract.} Polycystic ovary syndrome (PCOS) is a common endocrine disorder that is often diagnosed late due to heterogeneous clinical manifestations. We build an end-to-end machine learning pipeline on a public cohort of 541 patients (41 clinical, hormonal, and ultrasound features) and compare eight classifiers under repeated stratified 10-fold cross-validation plus an untouched 20\% held-out test set. The best model, Random Forest with correlation-based feature selection, reaches a cross-validated ROC-AUC of 0.957 $\pm$ 0.017 and a held-out test accuracy of 0.917 (ROC-AUC 0.945, 95\% CI [0.887, 0.991]). Beyond accuracy, we show that (i) a leaky validation protocol inflates accuracy by 2.7 percentage points and F1-score by 8.3 points, (ii) most competitive algorithms are practically indistinguishable, (iii) a questionnaire-only feature tier recovers 93\% of the full model's AUC without lab or ultrasound tests, and (iv) a simple follicle-count clinical rule is a strong baseline that the ML model improves mainly by boosting sensitivity (83.3\% vs 61.1\%, recovering 8 additional cases). Explainable AI (SHAP) reveals follicle counts, skin darkening, and cycle length as primary clinical drivers.}
-  \vspace{1.5em}
-]
+\maketitle
+
+\begin{abstract}
+\noindent Polycystic ovary syndrome (PCOS) is a common endocrine disorder that is often diagnosed late due to heterogeneous clinical manifestations. We build an end-to-end machine learning pipeline on a public cohort of 541 patients (41 clinical, hormonal, and ultrasound features) and compare eight classifiers under repeated stratified 10-fold cross-validation plus an untouched 20\% held-out test set. The best model, Random Forest with correlation-based feature selection, reaches a cross-validated ROC-AUC of 0.957 $\pm$ 0.017 and a held-out test accuracy of 0.917 (ROC-AUC 0.945, 95\% CI [0.887, 0.991]). Beyond accuracy, we show that (i) a leaky validation protocol inflates accuracy by 2.7 percentage points and F1-score by 8.3 points, (ii) most competitive algorithms are practically indistinguishable, (iii) a questionnaire-only feature tier recovers 93\% of the full model's AUC without lab or ultrasound tests, and (iv) a simple follicle-count clinical rule is a strong baseline that the ML model improves mainly by boosting sensitivity (83.3\% vs 61.1\%, recovering 8 additional cases). Explainable AI (SHAP) reveals follicle counts, skin darkening, and cycle length as primary clinical drivers.
+\end{abstract}
+
+\vspace{1.0em}
+
+\twocolumn
 
 \section{1. INTRODUCTION}
 Polycystic Ovary Syndrome (PCOS) affects between 8\% and 13\% of women of reproductive age worldwide, standing as the primary cause of anovulatory infertility and a major risk factor for metabolic syndrome, type 2 diabetes, and cardiovascular disease \cite{thakre2020pcos, rotterdam2004}. Clinical diagnosis relies on the 2003 Rotterdam criteria, requiring at least two of three markers: oligo/anovulation, hyperandrogenism, and polycystic ovarian morphology on pelvic ultrasound.
@@ -44,7 +50,7 @@ Despite its high prevalence, up to 70\% of affected women remain undiagnosed in 
 \end{enumerate}
 This project addresses these gaps with a leak-free, encapsulated pipeline evaluated under repeated stratified cross-validation, bootstrap confidence intervals, SHAP explainability, and cost-tiered clinical utility analysis.
 
-\section{2. LITERATURE REVIEW \& GAP ANALYSIS}
+\section{2. LITERATURE REVIEW AND GAP ANALYSIS}
 
 \subsection{2.1 Related Work}
 We reviewed five representative published studies on PCOS machine learning prediction:
@@ -130,7 +136,7 @@ We compared three feature selection methods against the full 41-feature baseline
     \item \textbf{Recursive Feature Elimination (RFE, 15 features):} Iteratively prunes tree-importance weights (CV ROC-AUC 0.879).
 \end{enumerate}
 
-\subsection{4.3 Class Imbalance \& SMOTE Ablation}
+\subsection{4.3 Class Imbalance and SMOTE Ablation}
 We conducted a 3-way ablation to evaluate imbalance strategies:
 \begin{itemize}[leftmargin=*]
     \item \textbf{No Balancing:} Accuracy 90.8\%, Recall 80.6\%, Specificity 95.9\%, ROC-AUC 0.935.
@@ -139,7 +145,7 @@ We conducted a 3-way ablation to evaluate imbalance strategies:
 \end{itemize}
 SMOTE inside CV provided the optimal sensitivity-specificity trade-off without artificially inflating validation metrics.
 
-\section{5. MODEL ZOO \& FORMULATIONS}
+\section{5. MODEL ZOO AND FORMULATIONS}
 
 We implemented eight diverse classification algorithms to explore distinct inductive biases:
 
@@ -243,7 +249,7 @@ This empirical evidence explains why prior literature reporting $>98\%$ accuracy
 \subsection{7.3 Statistical Significance}
 Paired $t$-tests across 30 CV folds indicate that top-performing models (RF, Stacking, Gaussian NB, Elastic-Net LR) are statistically and practically indistinguishable ($\Delta \text{AUC} < 0.011$). Only KNN showed statistically significant underperformance ($p = 0.051, \Delta = 0.028$). A 30-split seed sweep showed 4 different models winning across random seeds (Gaussian NB 40\%, RF 30\%, Stacking 20\%, Elastic-Net 10\%), demonstrating that single-split model rankings are highly stochastic.
 
-\subsection{7.4 Calibration \& Stability}
+\subsection{7.4 Calibration and Stability}
 Stacking Ensemble produced the best-calibrated probabilities (Brier score 0.081, ECE 0.032), whereas Gaussian NB exhibited poor calibration (ECE 0.100). Nested cross-validation confirmed minimal optimism bias ($0.0017$ ROC-AUC), proving the model is not overfitted.
 
 \section{8. EXPLAINABLE AI (SHAP)}
@@ -341,7 +347,7 @@ Global SHAP analysis ranks follicle counts (right 0.128, left 0.093 mean $|\text
 \label{fig:clinical_utility}
 \end{figure*}
 
-\section{9. CLINICAL UTILITY \& COST TIERS}
+\section{9. CLINICAL UTILITY AND COST TIERS}
 
 \subsection{9.1 Benchmark vs. Rotterdam Rule}
 Benchmarking Random Forest against the unlearned Rotterdam follicle rule ($\text{follicles} \ge 12$) reveals that the clinical rule achieves a strong baseline CV ROC-AUC of 0.902. However, the rule suffers from low sensitivity (recall 61.1\%, 22/36 cases). Random Forest boosts sensitivity to 83.3\% (30/36 cases), finding \textbf{8 additional PCOS cases} at the cost of only 2 extra false alarms (3 vs 1).
