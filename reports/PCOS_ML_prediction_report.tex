@@ -17,23 +17,20 @@
     urlcolor=blue
 }
 
-\title{\Large\textbf{Machine Learning-Based Prediction of}\\[0.2em]
-\Large\textbf{Polycystic Ovary Syndrome (PCOS)}\\[0.3em]
-\large Project Report --- Machine Learning Course, Group 5}
-
-\author{\textbf{Fatema Ferdous} (0152410052) \quad \textbf{Wafa Haque} (0152420023) \quad \textbf{Khondoker Sazzad Sunfi} (0152310002)\\[0.2em]
-\small Department of Data Science, United International University (UIU)}
-
-\date{}
-
 \begin{document}
 
 \twocolumn[
-  \begin{maketitle}
-  \end{maketitle}
-  \begin{abstract}
-  \noindent \textbf{Abstract.} Polycystic ovary syndrome (PCOS) is a common endocrine disorder that is often diagnosed late due to heterogeneous clinical manifestations. We build an end-to-end machine learning pipeline on a public cohort of 541 patients (41 clinical, hormonal, and ultrasound features) and compare eight classifiers under repeated stratified 10-fold cross-validation plus an untouched 20\% held-out test set. The best model, Random Forest with correlation-based feature selection, reaches a cross-validated ROC-AUC of 0.957 $\pm$ 0.017 and a held-out test accuracy of 0.917 (ROC-AUC 0.945, 95\% CI [0.887, 0.991]). Beyond accuracy, we show that (i) a leaky validation protocol inflates accuracy by 2.7 percentage points and F1-score by 8.3 points, (ii) most competitive algorithms are practically indistinguishable, (iii) a questionnaire-only feature tier recovers 93\% of the full model's AUC without lab or ultrasound tests, and (iv) a simple follicle-count clinical rule is a strong baseline that the ML model improves mainly by boosting sensitivity (83.3\% vs 61.1\%, recovering 8 additional cases). Explainable AI (SHAP) reveals follicle counts, skin darkening, and cycle length as primary clinical drivers.
-  \end{abstract}
+  \begin{center}
+    {\Large\textbf{Machine Learning-Based Prediction of}}\\[0.3em]
+    {\Large\textbf{Polycystic Ovary Syndrome (PCOS)}}\\[0.4em]
+    {\large Project Report --- Machine Learning Course, Group 5}\\[0.8em]
+    {\textbf{Fatema Ferdous} (0152410052) \quad \textbf{Wafa Haque} (0152420023) \quad \textbf{Khondoker Sazzad Sunfi} (0152310002)}\\[0.3em]
+    {\small Department of Data Science, United International University (UIU)}\\[1.2em]
+  \end{center}
+  \begin{quote}
+    \small
+    \noindent \textbf{Abstract.} Polycystic ovary syndrome (PCOS) is a common endocrine disorder that is often diagnosed late due to heterogeneous clinical manifestations. We build an end-to-end machine learning pipeline on a public cohort of 541 patients (41 clinical, hormonal, and ultrasound features) and compare eight classifiers under repeated stratified 10-fold cross-validation plus an untouched 20\% held-out test set. The best model, Random Forest with correlation-based feature selection, reaches a cross-validated ROC-AUC of 0.957 $\pm$ 0.017 and a held-out test accuracy of 0.917 (ROC-AUC 0.945, 95\% CI [0.887, 0.991]). Beyond accuracy, we show that (i) a leaky validation protocol inflates accuracy by 2.7 percentage points and F1-score by 8.3 points, (ii) most competitive algorithms are practically indistinguishable, (iii) a questionnaire-only feature tier recovers 93\% of the full model's AUC without lab or ultrasound tests, and (iv) a simple follicle-count clinical rule is a strong baseline that the ML model improves mainly by boosting sensitivity (83.3\% vs 61.1\%, recovering 8 additional cases). Explainable AI (SHAP) reveals follicle counts, skin darkening, and cycle length as primary clinical drivers.
+  \end{quote}
   \vspace{1.5em}
 ]
 
