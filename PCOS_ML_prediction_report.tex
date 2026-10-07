@@ -1,6 +1,6 @@
 % ============================================================
 %  PCOS ML Project Report — UIU Group 5
-%  Target: ~8 pages, no separate cover page, IEEE-style
+%  Target: 8 pages, no separate cover page, IEEE-style
 %  Compiler: pdflatex (Overleaf compatible)
 % ============================================================
 \documentclass[10pt,twocolumn,a4paper]{article}
@@ -13,7 +13,7 @@
 
 % --- Page Layout ----------------------------------------------
 \usepackage[top=0.75in,bottom=0.75in,left=0.70in,right=0.70in,
-            columnsep=0.22in]{geometry}
+            columnsep=0.20in]{geometry}
 
 % --- Math & Science -------------------------------------------
 \usepackage{amsmath,amssymb}
@@ -92,7 +92,7 @@
 % ============================================================
 \twocolumn[{%
 \begin{center}
-  {\color{primary}\fontsize{21pt}{25pt}\selectfont\bfseries
+  {\color{primary}\fontsize{23pt}{27pt}\selectfont\bfseries
     Machine Learning-Based Prediction of\\[0.2em]
     Polycystic Ovary Syndrome (PCOS)\par}
   \vspace{0.6em}
@@ -117,7 +117,7 @@ Eight models, comprising seven core classifiers and one stacking ensemble, were 
 All preprocessing, feature selection, and SMOTE oversampling were encapsulated inside each fold to
 prevent data leakage.  The best cross-validated model, Random Forest with a 20-feature correlation-based
 subset, achieves CV ROC-AUC $0.957 \pm 0.017$ and held-out test AUC $0.945$ (95\% CI: $[0.887,\,0.991]$).
-A dedicated leakage experiment demonstrates that applying SMOTE and feature selection \emph{before} CV
+A dedicated experiment demonstrates that applying SMOTE and feature selection \emph{before} CV
 inflates accuracy by $+2.7$ pp and F1 by $+8.3$ pp on identical data.  SHAP analysis identifies
 follicle count and the hyperandrogenism symptom cluster as primary predictors, aligning with established
 Rotterdam diagnostic criteria.  A questionnaire-only model (no lab or ultrasound) recovers 93\% of the full
@@ -390,8 +390,29 @@ KNN                & 0.853 & 0.778 & 0.778 & 0.778 & 0.890 & 0.940 & 28 / 8 \\
 On the test set, XGBoost reached test AUC 0.954, while Random Forest and Stacking Ensemble both recorded test AUC 0.945.
 Stacking Ensemble achieved the highest specificity (0.973, 2 false positives), whereas Gaussian NB recorded the highest recall
 (0.917, 33/36 cases detected) alongside 7 false positives.
-Bootstrap 95\% confidence intervals for Random Forest yield: Accuracy 0.917 $[0.862, 0.963]$, Recall 0.833 $[0.703, 0.944]$, and
-Test AUC 0.945 $[0.887, 0.991]$.  The recall interval width ($\pm 12$ pp) reflects the sample-size constraints of 36 positive test cases.
+
+To quantify uncertainty on the held-out test set, 2000 percentile bootstrap resamples were computed for Random Forest (Table~\ref{tab:bootstrap}).
+The recall confidence interval width ($\pm 12$ pp) reflects the sample-size constraints of 36 positive test cases.
+
+\begin{table}[t]
+\centering
+\caption{Bootstrap 95\% confidence intervals for Random Forest on the held-out test set (2000 resamples). Source: \texttt{bootstrap\_ci.csv}.}
+\label{tab:bootstrap}
+\setlength{\tabcolsep}{6pt}
+\small
+\begin{tabular}{lccc}
+\toprule
+Metric & Point Estimate & 95\% Bootstrap CI & Interval Width \\
+\midrule
+Accuracy    & 0.917 & [0.862, 0.963] & 0.101 \\
+Precision   & 0.909 & [0.800, 1.000] & 0.200 \\
+Recall      & 0.833 & [0.703, 0.944] & 0.241 \\
+F1-Score    & 0.870 & [0.781, 0.946] & 0.165 \\
+Specificity & 0.959 & [0.904, 1.000] & 0.096 \\
+Test ROC-AUC& 0.945 & [0.887, 0.991] & 0.104 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{figure*}[t]
 \centering
@@ -454,7 +475,7 @@ Using fewer measurements may reduce data-collection burden, although actual coll
 
 \begin{table}[t]
 \centering
-\caption{Feature selection strategy and class-balancing ablation results.}
+\caption{Feature-selection and class-balancing ablation results for Random Forest.}
 \label{tab:fsel}
 \setlength{\tabcolsep}{4pt}
 \small
@@ -482,8 +503,31 @@ Unweighted Baseline & 0.908 & 0.806 & 0.959 & 0.853 \\
 Nested CV (outer fold selection, inner fold tuning) yielded CV AUC $0.9541 \pm 0.020$ vs flat CV $0.9558$, indicating negligible selection bias ($0.0017$).
 AutoML benchmarking using FLAML (120s search budget) converged on a tuned Random Forest with test AUC 0.946 vs hand-built RF 0.945 ($+0.0004$),
 confirming that data quality rather than model tuning limits performance.
-Probability calibration analysis shows that Stacking Ensemble achieves superior calibration (Brier 0.081, ECE 0.032), whereas Gaussian NB exhibits
-poor probability calibration (Brier 0.109, ECE 0.100) despite competitive AUC discrimination.
+
+Probability calibration analysis (Table~\ref{tab:calibration}) shows that Stacking Ensemble achieves superior probability calibration
+(Brier 0.081, ECE 0.032), whereas Gaussian NB exhibits poor probability calibration (Brier 0.109, ECE 0.100) despite competitive AUC discrimination.
+
+\begin{table}[t]
+\centering
+\caption{Probability calibration metrics across evaluated models on held-out test set. Source: \texttt{calibration\_metrics.csv}.}
+\label{tab:calibration}
+\setlength{\tabcolsep}{4pt}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Model Name & Brier Score $\downarrow$ & Log Loss $\downarrow$ & ECE $\downarrow$ & Test AUC \\
+\midrule
+Stacking Ensemble  & \textbf{0.081} & \textbf{0.272} & \textbf{0.032} & 0.950 \\
+Elastic-Net LR     & 0.082          & 0.282          & 0.048          & 0.945 \\
+Random Forest      & 0.083          & 0.276          & 0.061          & 0.956 \\
+Logistic Regression& 0.084          & 0.285          & 0.056          & 0.945 \\
+SVM (RBF)          & 0.084          & 0.299          & 0.034          & 0.943 \\
+XGBoost            & 0.094          & 0.335          & 0.071          & 0.944 \\
+KNN                & 0.098          & 0.766          & 0.072          & 0.928 \\
+Gaussian NB        & 0.109          & 0.441          & 0.100          & 0.951 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 % ============================================================
 \section{EXPLAINABLE AI (SHAP)}
@@ -537,24 +581,25 @@ Features were partitioned into four cumulative acquisition tiers (Table~\ref{tab
 
 \begin{table}[t]
 \centering
-\caption{Predictive performance across cumulative feature acquisition tiers.}
+\caption{Predictive performance across cumulative feature acquisition tiers using Random Forest.}
 \label{tab:tiers}
 \setlength{\tabcolsep}{4pt}
 \small
 \begin{tabular}{lccc}
 \toprule
-Tier Specification & Feature Count & CV ROC-AUC & Marginal $\Delta$ AUC \\
+Tier Specification & Feature Count & CV ROC-AUC & Marginal $\Delta$ AUC$^*$ \\
 \midrule
 1. Questionnaire Only  & 19 & 0.887 & --- \\
 2. + Clinic Vitals      & 25 & 0.880 & $-0.007$ \\
-3. + Blood Panel        & 36 & 0.890 & $+0.011$ \\
+3. + Blood Panel        & 36 & 0.890 & $+0.010^*$ \\
 4. + Ultrasound (All)   & 41 & 0.952 & $+0.062$ \\
 \bottomrule
+\multicolumn{4}{l}{\footnotesize $^*$Marginal changes are calculated from unrounded AUC values; displayed AUCs are rounded.}
 \end{tabular}
 \end{table}
 
 The questionnaire-only tier (19 self-reported/anthropometric features) achieves CV AUC 0.887 (93\% of full model AUC), offering a potential low-resource screening option.
-The laboratory blood-panel tier introduces 11 features (comprising 9 endocrine biomarker assays, the FSH/LH ratio, and random blood sugar) and adds only $+0.011$ AUC relative to the clinic-vitals tier, demonstrating only a small incremental improvement in predictive discrimination within this dataset.
+The laboratory blood-panel tier introduces 11 features (comprising 9 endocrine biomarker assays, the FSH/LH ratio, and random blood sugar) and adds only $+0.010^*$ AUC relative to the clinic-vitals tier, demonstrating only a small incremental improvement in predictive discrimination within this dataset.
 The ultrasound-inclusive tier produced the largest incremental AUC improvement among the evaluated feature tiers ($+0.062$), introducing the dominant follicle count features.
 
 \subsection{Comparison with Clinical Decision Rules}
@@ -590,7 +635,6 @@ The questionnaire-only ML model (CV AUC 0.887) achieves performance competitive 
 \begin{figure}[t]
 \centering
 \begin{subfigure}[b]{0.48\columnwidth}
-  \import{.}
   \includegraphics[width=\linewidth]{reports/figures/27_cost_tiers.png}
   \caption{AUC by cost tier}
 \end{subfigure}\hfill
@@ -616,7 +660,7 @@ Paired $t$-tests across 30 folds flag minor AUC deficits ($<0.020$) as statistic
 Among the evaluated models, KNN showed the clearest practically meaningful performance disadvantage relative to Random Forest ($\Delta = -0.028$).
 
 \textbf{Feature Value in Screening:}
-FSH, LH, and AMH show Cohen's $d < 0.18$.  For screening, the blood panel provided minimal discriminative gain relative to its measurement complexity.
+FSH, LH, and AMH show Cohen's $d < 0.18$.  The blood-panel tier provided only a small incremental improvement in discrimination relative to the clinic-vitals tier.
 
 \textbf{Literature Comparison Context:}
 Among the papers reviewed for this project, reported accuracies span 90.9--99.3\% using single splits (Table~\ref{tab:literature}).
@@ -630,7 +674,7 @@ Our 91.7\% test accuracy is obtained under a leak-free 30-fold protocol with boo
 \small
 \begin{tabular}{lp{1.6cm}cc}
 \toprule
-Study Citation & Best Model & Reported Accuracy / AUC & Validation Protocol \\
+Study Citation & Best Model & Reported Metric & Validation Protocol \\
 \midrule
 Thakre et al.\ \cite{thakre2020pcos} & Random Forest & 90.9\% Acc. & Single 80/20 Split \\
 Zad et al.\ \cite{zad2024}           & GBT / MLP     & 0.825 AUC   & EHR Held-Out Split \\
