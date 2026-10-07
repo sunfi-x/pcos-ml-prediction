@@ -75,7 +75,7 @@
 \setlength{\parskip}{0.3ex}
 \setlength{\parindent}{1.1em}
 \setlength{\abovecaptionskip}{5pt}
-\setlength{\belowcaptionskip}{3pt}
+\setlength{\belowcaptionskip}{6pt}
 \setlength{\textfloatsep}{10pt plus 3pt minus 2pt}
 \setlength{\dbltextfloatsep}{10pt plus 3pt minus 2pt}
 \setlength{\floatsep}{8pt plus 2pt minus 2pt}
@@ -399,8 +399,9 @@ The recall confidence interval width ($\pm 12$ pp) reflects the sample-size cons
 
 \begin{table}[t]
 \centering
-\caption{Bootstrap 95\% confidence intervals for Random Forest on the held-out test set (2000 resamples). Source: \texttt{bootstrap\_ci.csv}.}
+\caption{Bootstrap 95\% confidence intervals for Random Forest on held-out test set.}
 \label{tab:bootstrap}
+\vspace{2pt}
 \setlength{\tabcolsep}{3pt}
 \small
 \begin{tabular}{@{}l c c c@{}}
@@ -489,6 +490,7 @@ Using fewer measurements may reduce data-collection burden, although actual coll
 \centering
 \caption{Feature-selection and class-balancing ablation results for Random Forest.}
 \label{tab:fsel}
+\vspace{2pt}
 \setlength{\tabcolsep}{2.5pt}
 \small
 \begin{tabular}{@{}l c c c c@{}}
@@ -521,8 +523,9 @@ Probability calibration analysis (Table~\ref{tab:calibration} and Figure~\ref{fi
 
 \begin{table}[htbp]
 \centering
-\caption{Probability calibration metrics across evaluated models on held-out test set. Source: \texttt{calibration\_metrics.csv}.}
+\caption{Probability calibration metrics across evaluated models on held-out test set.}
 \label{tab:calibration}
+\vspace{2pt}
 \setlength{\tabcolsep}{2pt}
 \small
 \begin{tabular}{@{}l c c c c@{}}
@@ -564,8 +567,9 @@ SHAP values explain model \emph{predictions} and should not be interpreted as ev
 
 \begin{table}[htbp]
 \centering
-\caption{Top 10 features ranked by mean absolute SHAP value. Source: \texttt{shap\_importance.csv}.}
+\caption{Top 10 features ranked by mean absolute SHAP value.}
 \label{tab:shap}
+\vspace{2pt}
 \setlength{\tabcolsep}{3.5pt}
 \small
 \begin{tabular}{@{}l c c@{}}
@@ -646,8 +650,9 @@ Table~\ref{tab:clinical} benchmarks ML models against five non-parametric clinic
 
 \begin{table}[htbp]
 \centering
-\caption{Comparison of machine-learning models and clinical decision rules using cross-validated AUC and held-out test-set recall and TP/FP count. Source: \texttt{clinical\_rule\_comparison.csv}.}
+\caption{Comparison of machine-learning models and clinical decision rules.}
 \label{tab:clinical}
+\vspace{2pt}
 \setlength{\tabcolsep}{2pt}
 \small
 \begin{tabular}{@{}p{3.1cm} c c c c@{}}
