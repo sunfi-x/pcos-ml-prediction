@@ -559,7 +559,7 @@ Gaussian NB        & 0.109          & 0.441          & 0.100          & 0.951 \\
 SHAP feature attributions were calculated on the held-out test set using \texttt{TreeExplainer} \cite{lundberg2017shap}.
 SHAP values explain model \emph{predictions} and should not be interpreted as evidence of causal or independent biological discovery.
 
-\begin{table}[t]
+\begin{table}[htbp]
 \centering
 \caption{Top 10 features ranked by mean absolute SHAP value. Source: \texttt{shap\_importance.csv}.}
 \label{tab:shap}
@@ -613,7 +613,7 @@ be interpreted as evidence of causal or independent biological discovery.
 \subsection{Feature Acquisition Tiers}
 Features were partitioned into four cumulative acquisition tiers (Table~\ref{tab:tiers}).
 
-\begin{table}[t]
+\begin{table}[htbp]
 \centering
 \caption{Predictive performance across cumulative feature acquisition tiers using Random Forest.}
 \label{tab:tiers}
@@ -639,27 +639,27 @@ The ultrasound-inclusive tier produced the largest incremental AUC improvement a
 \subsection{Comparison with Clinical Decision Rules}
 Table~\ref{tab:clinical} benchmarks ML models against five non-parametric clinical decision rules evaluated on identical test splits.
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
 \caption{Comparison of machine-learning models and clinical decision rules using cross-validated AUC and held-out test-set recall and TP/FP count. Source: \texttt{clinical\_rule\_comparison.csv}.}
 \label{tab:clinical}
-\setlength{\tabcolsep}{8pt}
+\setlength{\tabcolsep}{2.5pt}
 \small
-\begin{tabular}{@{}l l c c c@{}}
+\begin{tabular}{@{}l c c c c@{}}
 \toprule
-Approach Specification & Approach Type & CV ROC-AUC & Test Recall & Test TP / FP Count \\
+Approach Specification & Type & CV AUC & Recall & TP / FP \\
 \midrule
-Random Forest Classifier & ML Model & 0.957 & 0.833 & 30 / 3 \\
-Stacking Ensemble        & ML Model & 0.951 & 0.833 & 30 / 2 \\
+Random Forest Classifier & ML & 0.957 & 0.833 & 30 / 3 \\
+Stacking Ensemble        & ML & 0.951 & 0.833 & 30 / 2 \\
 \midrule
-Rotterdam Rule ($\ge 12$ Follicles) & Clinical Decision Rule & 0.902 & 0.611 & 22 / 1 \\
-Tuned Follicle Threshold ($\ge 10$) & Clinical Decision Rule & 0.902 & 0.722 & 26 / 8 \\
-Logistic Single-Feature (Follicle) & Clinical Decision Rule & 0.889 & 0.750 & 27 / 8 \\
-Symptom Count Rule ($k \ge 3$)     & Clinical Decision Rule & 0.857 & 0.806 & 29 / 11 \\
-Decision Tree Baseline ($d=2$)      & Clinical Decision Rule & 0.854 & 0.583 & 21 / 0 \\
+Rotterdam Rule ($\ge 12$ Follicles) & Rule & 0.902 & 0.611 & 22 / 1 \\
+Tuned Follicle Threshold ($\ge 10$) & Rule & 0.902 & 0.722 & 26 / 8 \\
+Logistic Single-Feature (Follicle) & Rule & 0.889 & 0.750 & 27 / 8 \\
+Symptom Count Rule ($k \ge 3$)     & Rule & 0.857 & 0.806 & 29 / 11 \\
+Decision Tree Baseline ($d=2$)      & Rule & 0.854 & 0.583 & 21 / 0 \\
 \bottomrule
 \end{tabular}
-\end{table*}
+\end{table}
 
 The Rotterdam follicle rule ($\ge 12$ follicles) achieves CV AUC 0.902 (94.3\% of ML model AUC).
 However, its sensitivity is limited (detecting 22/36 test cases).  The ML model detects 30/36 cases ($+8$ cases detected, $+2$ net false alarms).
