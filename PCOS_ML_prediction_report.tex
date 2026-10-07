@@ -1,4 +1,4 @@
-\documentclass[twocolumn,10pt,a4paper]{article}
+\documentclass[10pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[margin=0.6in,top=0.65in,bottom=0.65in]{geometry}
 \usepackage{amsmath,amssymb,amsfonts}
@@ -30,22 +30,25 @@
     urlcolor=secondary
 }
 
+\title{\color{primary}\Large\bfseries Machine Learning-Based Prediction of Polycystic Ovary Syndrome (PCOS)\\[0.3em]
+\color{secondary}\large\bfseries Project Report --- Machine Learning Course, Group 5}
+
+\author{\textbf{Fatema Ferdous} (0152410052) \quad \textbf{Wafa Haque} (0152420023) \quad \textbf{Khondoker Sazzad Sunfi} (0152310002)\\[0.2em]
+\small Department of Data Science, United International University (UIU)}
+
+\date{}
+
 \begin{document}
 
-\twocolumn[
-  \begin{center}
-    {\color{primary}\Large\textbf{Machine Learning-Based Prediction of}}\\[0.25em]
-    {\color{primary}\Large\textbf{Polycystic Ovary Syndrome (PCOS)}}\\[0.35em]
-    {\color{secondary}\large\textbf{Project Report --- Machine Learning Course, Group 5}}\\[0.8em]
-    {\textbf{Fatema Ferdous} (0152410052) \quad \textbf{Wafa Haque} (0152420023) \quad \textbf{Khondoker Sazzad Sunfi} (0152310002)}\\[0.3em]
-    {\small Department of Data Science, United International University (UIU)}\\[1.2em]
-  \end{center}
-  \begin{quote}
-    \small
-    \noindent \textbf{Abstract.} Polycystic ovary syndrome (PCOS) is a common endocrine disorder that is often diagnosed late due to heterogeneous clinical manifestations. We build an end-to-end machine learning pipeline on a public cohort of 541 patients (41 clinical, hormonal, and ultrasound features) and compare eight classifiers under repeated stratified 10-fold cross-validation plus an untouched 20\% held-out test set. The best model, Stacking Ensemble (and Random Forest) with correlation-based feature selection, reaches a cross-validated ROC-AUC of 0.956 $\pm$ 0.028 and a held-out test accuracy of 0.927 (ROC-AUC 0.945, 95\% CI [0.886, 0.989]). Beyond accuracy, we show that (i) a leaky validation protocol inflates accuracy by 3.2 percentage points and F1-score by 9.0 points, (ii) most competitive algorithms are practically indistinguishable, (iii) a questionnaire-only feature tier recovers 93\% of the full model's AUC without lab or ultrasound tests, and (iv) a simple follicle-count clinical rule is a strong baseline that the ML model improves mainly by boosting sensitivity (83.3\% vs 61.1\%, recovering 8 additional cases). Explainable AI (SHAP) reveals follicle counts, skin darkening, and cycle length as primary clinical drivers.
-  \end{quote}
-  \vspace{1.2em}
-]
+\maketitle
+
+\begin{abstract}
+\noindent Polycystic ovary syndrome (PCOS) is a common endocrine disorder that is often diagnosed late due to heterogeneous clinical manifestations. We build an end-to-end machine learning pipeline on a public cohort of 541 patients (41 clinical, hormonal, and ultrasound features) and compare eight classifiers under repeated stratified 10-fold cross-validation plus an untouched 20\% held-out test set. The best model, Stacking Ensemble (and Random Forest) with correlation-based feature selection, reaches a cross-validated ROC-AUC of 0.956 $\pm$ 0.028 and a held-out test accuracy of 0.927 (ROC-AUC 0.945, 95\% CI [0.886, 0.989]). Beyond accuracy, we show that (i) a leaky validation protocol inflates accuracy by 3.2 percentage points and F1-score by 9.0 points, (ii) most competitive algorithms are practically indistinguishable, (iii) a questionnaire-only feature tier recovers 93\% of the full model's AUC without lab or ultrasound tests, and (iv) a simple follicle-count clinical rule is a strong baseline that the ML model improves mainly by boosting sensitivity (83.3\% vs 61.1\%, recovering 8 additional cases). Explainable AI (SHAP) reveals follicle counts, skin darkening, and cycle length as primary clinical drivers.
+\end{abstract}
+
+\vspace{1.0em}
+
+\twocolumn
 
 \section{INTRODUCTION}
 PCOS affects a large share of women of reproductive age and is diagnosed with the Rotterdam criteria (irregular ovulation, hyperandrogenism, polycystic ovaries on ultrasound) \cite{thakre2020pcos, rotterdam2004}. Several recent papers report 98--99\% accuracy for ML-based PCOS detection on the same small public dataset, yet most do not describe how class imbalance, feature selection, and validation were handled. Our literature review of five such papers found recurring gaps: unaddressed class imbalance, possible leakage, a single train/test split, little explainability, no uncertainty estimates, and no comparison with simple clinical rules. This project closes those gaps with a carefully validated and explainable pipeline.
