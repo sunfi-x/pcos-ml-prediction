@@ -486,13 +486,13 @@ Evaluating feature selection strategies (Table~\ref{tab:fsel}) reveals that the 
 CV AUC ($0.957$), while chi-square ($0.952$) and RFE ($0.952$) produced slightly lower scores than the all-features baseline ($0.954$).
 Using fewer measurements may reduce data-collection burden, although actual collection cost was not evaluated in this study.
 
-\begin{table}[htbp]
+\begin{table}[t]
 \centering
 \caption{Feature-selection and class-balancing ablation results for Random Forest.}
 \label{tab:fsel}
 \vspace{2pt}
-\setlength{\tabcolsep}{2.5pt}
-\small
+\setlength{\tabcolsep}{2pt}
+\footnotesize
 \begin{tabular}{@{}l c c c c@{}}
 \toprule
 \multicolumn{5}{l}{\textit{Feature Selection Strategy (Random Forest)}} \\
@@ -521,13 +521,13 @@ confirming that data quality rather than model tuning limits performance.
 Probability calibration analysis (Table~\ref{tab:calibration} and Figure~\ref{fig:cal_lc}) shows that Stacking Ensemble achieves superior probability calibration
 (Brier 0.081, ECE 0.032), whereas Gaussian NB exhibits poor probability calibration (Brier 0.109, ECE 0.100) despite competitive AUC discrimination.
 
-\begin{table}[htbp]
+\begin{table}[t]
 \centering
 \caption{Probability calibration metrics across evaluated models on held-out test set.}
 \label{tab:calibration}
 \vspace{2pt}
 \setlength{\tabcolsep}{2pt}
-\small
+\footnotesize
 \begin{tabular}{@{}l c c c c@{}}
 \toprule
 Model & Brier $\downarrow$ & LogLoss $\downarrow$ & ECE $\downarrow$ & Test AUC \\
@@ -557,6 +557,8 @@ Gaussian NB        & 0.109          & 0.441          & 0.100          & 0.951 \\
 \caption{Robustness analysis: (a)~Probability calibration reliability diagram (out-of-fold) --- Stacking Ensemble achieves the best calibration (Brier 0.081, ECE 0.032); (b)~Learning curve showing that CV AUC is still mildly increasing at the current sample size, suggesting additional data could improve performance.}
 \label{fig:cal_lc}
 \end{figure*}
+
+\FloatBarrier
 
 % ============================================================
 \section{EXPLAINABLE AI (SHAP)}
