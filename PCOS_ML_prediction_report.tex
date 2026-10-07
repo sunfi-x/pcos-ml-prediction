@@ -21,16 +21,13 @@
 
 \twocolumn[
   \begin{center}
-    {\Large\textbf{Machine Learning-Based Prediction of}}\\[0.3em]
-    {\Large\textbf{Polycystic Ovary Syndrome (PCOS)}}\\[0.4em]
-    {\large Project Report --- Machine Learning Course, Group 5}\\[0.8em]
+    {\Large \textbf{Machine Learning-Based Prediction of Polycystic Ovary Syndrome (PCOS)}}\\[0.4em]
+    {\large \textbf{Project Report --- Machine Learning Course, Group 5}}\\[0.8em]
     {\textbf{Fatema Ferdous} (0152410052) \quad \textbf{Wafa Haque} (0152420023) \quad \textbf{Khondoker Sazzad Sunfi} (0152310002)}\\[0.3em]
     {\small Department of Data Science, United International University (UIU)}\\[1.2em]
   \end{center}
-  \begin{quote}
-    \small
-    \noindent \textbf{Abstract.} Polycystic ovary syndrome (PCOS) is a common endocrine disorder that is often diagnosed late due to heterogeneous clinical manifestations. We build an end-to-end machine learning pipeline on a public cohort of 541 patients (41 clinical, hormonal, and ultrasound features) and compare eight classifiers under repeated stratified 10-fold cross-validation plus an untouched 20\% held-out test set. The best model, Random Forest with correlation-based feature selection, reaches a cross-validated ROC-AUC of 0.957 $\pm$ 0.017 and a held-out test accuracy of 0.917 (ROC-AUC 0.945, 95\% CI [0.887, 0.991]). Beyond accuracy, we show that (i) a leaky validation protocol inflates accuracy by 2.7 percentage points and F1-score by 8.3 points, (ii) most competitive algorithms are practically indistinguishable, (iii) a questionnaire-only feature tier recovers 93\% of the full model's AUC without lab or ultrasound tests, and (iv) a simple follicle-count clinical rule is a strong baseline that the ML model improves mainly by boosting sensitivity (83.3\% vs 61.1\%, recovering 8 additional cases). Explainable AI (SHAP) reveals follicle counts, skin darkening, and cycle length as primary clinical drivers.
-  \end{quote}
+  {\small
+  \noindent \textbf{Abstract.} Polycystic ovary syndrome (PCOS) is a common endocrine disorder that is often diagnosed late due to heterogeneous clinical manifestations. We build an end-to-end machine learning pipeline on a public cohort of 541 patients (41 clinical, hormonal, and ultrasound features) and compare eight classifiers under repeated stratified 10-fold cross-validation plus an untouched 20\% held-out test set. The best model, Random Forest with correlation-based feature selection, reaches a cross-validated ROC-AUC of 0.957 $\pm$ 0.017 and a held-out test accuracy of 0.917 (ROC-AUC 0.945, 95\% CI [0.887, 0.991]). Beyond accuracy, we show that (i) a leaky validation protocol inflates accuracy by 2.7 percentage points and F1-score by 8.3 points, (ii) most competitive algorithms are practically indistinguishable, (iii) a questionnaire-only feature tier recovers 93\% of the full model's AUC without lab or ultrasound tests, and (iv) a simple follicle-count clinical rule is a strong baseline that the ML model improves mainly by boosting sensitivity (83.3\% vs 61.1\%, recovering 8 additional cases). Explainable AI (SHAP) reveals follicle counts, skin darkening, and cycle length as primary clinical drivers.}
   \vspace{1.5em}
 ]
 
@@ -59,7 +56,7 @@ We reviewed five representative published studies on PCOS machine learning predi
     \item \textbf{RFE + XAI (Elmannai et al., 2023 \cite{elmannai2023pcos}):} Applied RFE and SHAP with a Stacking Ensemble, reporting 98.87\% accuracy.
 \end{enumerate}
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Comparison of literature studies vs. our work.}
 \label{tab:literature}
@@ -104,7 +101,7 @@ To prevent data leakage, all preprocessing transformations are encapsulated insi
 $$\text{Impute} \rightarrow \text{Scale} \rightarrow \text{Select Features} \rightarrow \text{SMOTE} \rightarrow \text{Classifier}$$
 When evaluated under $K$-fold cross-validation, every fold independently fits its own median imputer, standard scaler, feature selector, and SMOTE resampler. Validation folds are never observed during preprocessing.
 
-\begin{table}[t]
+\begin{table}[htbp]
 \centering
 \caption{Cross-validated and held-out test performance.}
 \label{tab:performance}
@@ -133,7 +130,7 @@ We compared three feature selection methods against the full 41-feature baseline
     \item \textbf{Recursive Feature Elimination (RFE, 15 features):} Iteratively prunes tree-importance weights (CV ROC-AUC 0.879).
 \end{enumerate}
 
-\subsection{4.3 Class Imbalance & SMOTE Ablation}
+\subsection{4.3 Class Imbalance \& SMOTE Ablation}
 We conducted a 3-way ablation to evaluate imbalance strategies:
 \begin{itemize}[leftmargin=*]
     \item \textbf{No Balancing:} Accuracy 90.8\%, Recall 80.6\%, Specificity 95.9\%, ROC-AUC 0.935.
@@ -246,7 +243,7 @@ This empirical evidence explains why prior literature reporting $>98\%$ accuracy
 \subsection{7.3 Statistical Significance}
 Paired $t$-tests across 30 CV folds indicate that top-performing models (RF, Stacking, Gaussian NB, Elastic-Net LR) are statistically and practically indistinguishable ($\Delta \text{AUC} < 0.011$). Only KNN showed statistically significant underperformance ($p = 0.051, \Delta = 0.028$). A 30-split seed sweep showed 4 different models winning across random seeds (Gaussian NB 40\%, RF 30\%, Stacking 20\%, Elastic-Net 10\%), demonstrating that single-split model rankings are highly stochastic.
 
-\subsection{7.4 Calibration & Stability}
+\subsection{7.4 Calibration \& Stability}
 Stacking Ensemble produced the best-calibrated probabilities (Brier score 0.081, ECE 0.032), whereas Gaussian NB exhibited poor calibration (ECE 0.100). Nested cross-validation confirmed minimal optimism bias ($0.0017$ ROC-AUC), proving the model is not overfitted.
 
 \section{8. EXPLAINABLE AI (SHAP)}
