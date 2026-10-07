@@ -541,19 +541,19 @@ Gaussian NB        & 0.109          & 0.441          & 0.100          & 0.951 \\
 \end{tabular}
 \end{table}
 
-\begin{figure}[tbp]
+\begin{figure*}[t]
 \centering
-\begin{subfigure}[b]{0.48\columnwidth}
+\begin{subfigure}[b]{0.48\textwidth}
   \includegraphics[width=\linewidth]{reports/figures/19_calibration_curves.png}
-  \caption{Probability calibration}
+  \caption{Probability calibration reliability curves}
 \end{subfigure}\hfill
-\begin{subfigure}[b]{0.48\columnwidth}
+\begin{subfigure}[b]{0.48\textwidth}
   \includegraphics[width=\linewidth]{reports/figures/24_learning_curve.png}
-  \caption{Learning curve}
+  \caption{Learning curve (sample size scaling)}
 \end{subfigure}
-\caption{Robustness analysis: (a)~Probability calibration reliability curves; (b)~Learning curve showing sample size scaling.}
+\caption{Robustness analysis: (a)~Probability calibration reliability diagram (out-of-fold) --- Stacking Ensemble achieves the best calibration (Brier 0.081, ECE 0.032); (b)~Learning curve showing that CV AUC is still mildly increasing at the current sample size, suggesting additional data could improve performance.}
 \label{fig:cal_lc}
-\end{figure}
+\end{figure*}
 
 % ============================================================
 \section{EXPLAINABLE AI (SHAP)}
